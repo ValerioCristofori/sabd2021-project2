@@ -2,6 +2,8 @@ package it.uniroma2.query1;
 
 import java.io.IOException;
 
+import it.uniroma2.bolt.ParserCellaBolt;
+import it.uniroma2.spout.EntrySpout;
 import org.apache.storm.Config;
 import org.apache.storm.topology.TopologyBuilder;
 
@@ -14,10 +16,10 @@ public class Query1 {
 	public Query1(String[] args) throws SecurityException, IOException {
 		if( args != null && args.length > 0 ) {
 			this.builder = new TopologyBuilder();
-			//builder.setSpout("spout", new RandomSentenceSpout(), 5);
+			builder.setSpout("spout", new EntrySpout(), 5);
 	
-	        //builder.setBolt("split", new SplitSentenceBolt(), 8)
-	        //        .shuffleGrouping("spout");
+	        builder.setBolt("parser", new ParserCellaBolt(), 4)
+	                .shuffleGrouping("spout");
 	
 	        //builder.setBolt("count", new WordCountBolt(), 12)
 	        //       .fieldsGrouping("split", new Fields("word"));
