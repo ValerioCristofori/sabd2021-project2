@@ -3,16 +3,50 @@
   <groupId>sabd2021-project2</groupId>
   <artifactId>sabd2021-project2</artifactId>
   <version>v1.0</version>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.storm</groupId>
+  		<artifactId>storm-core</artifactId>
+  		<version>1.1.0</version>
+        <scope>provided</scope>
+  	</dependency>
+  </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.7.0</version>
         <configuration>
-          <release>15</release>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-compiler-plugin</artifactId>
+      	<configuration>
+      		<source>1.8</source>
+      		<target>1.8</target>
+   		</configuration>
+	</plugin>
+	<plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  
 </project>

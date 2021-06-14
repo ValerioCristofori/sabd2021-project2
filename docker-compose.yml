@@ -1,0 +1,123 @@
+version: '3'
+
+services:
+    storm-nimbus:
+        image: storm
+        container_name: nimbus
+        command: storm nimbus
+        depends_on:
+            - rabbitmq
+            - zookeeper
+        links:
+            - zookeeper
+            - rabbitmq
+        restart: always
+        ports:
+            - "6627:6627"
+            - "8000:8000"
+
+    storm-cli:
+        image: effeerre/storm-cli
+        container_name: storm-cli
+        depends_on:
+            - zookeeper
+            - rabbitmq
+            - storm-nimbus
+            - redis
+        links:
+            - zookeeper
+            - rabbitmq
+            - storm-nimbus
+            - redis
+        entrypoint: /bin/bash
+        stdin_open: true
+        tty: true
+        volumes: 
+            - ./data:/data
+  
+    zookeeper:
+        image: zookeeper
+        container_name: zookeeper
+        restart: always
+        ports:
+             - "2181:2181"
+    
+    storm-ui: 
+        image: storm
+        container_name: storm-ui
+        command: storm ui
+        depends_on: 
+            - storm-nimbus
+            - zookeeper
+        links: 
+            - storm-nimbus
+            - zookeeper
+        restart: always
+        ports:
+            - "8080:8080"
+
+    worker1:
+        image: storm
+        command: storm supervisor
+        container_name: worker1
+        depends_on:
+            - rabbitmq
+            - storm-nimbus
+            - zookeeper
+            - redis
+        links:
+            - storm-nimbus
+            - rabbitmq
+            - redis
+            - zookeeper
+        restart: always
+
+    worker2:
+        image: storm
+        command: storm supervisor
+        container_name: worker2
+        depends_on:
+            - storm-nimbus
+            - rabbitmq
+            - zookeeper
+            - redis
+        links:
+            - rabbitmq
+            - storm-nimbus
+            - zookeeper
+            - redis
+        restart: always
+
+    worker3:
+        image: storm
+        command: storm supervisor
+        container_name: worker3
+        depends_on:
+            - storm-nimbus
+            - rabbitmq
+            - zookeeper
+            - redis
+        links:
+            - storm-nimbus
+            - rabbitmq
+            - zookeeper
+            - redis
+        restart: always
+
+#    rabbitmq:
+#        image: rabbitmq:3-management 
+#       container_name: rabbitmq
+#        restart: always
+#        environment: 
+#            - RABBITMQ_DEFAULT_USER=rabbitmq
+#            - RABBITMQ_DEFAULT_PASS=rabbitmq
+#        ports:
+#            - "15672:15672"
+#            - "5672:5672"
+
+#    redis:
+#        image: redis:3.2-alpine
+#        container_name: redis
+#        restart: always
+#        ports:
+#            - "6379:6379"
