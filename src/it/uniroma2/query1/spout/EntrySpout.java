@@ -1,4 +1,4 @@
-package it.uniroma2.spout;
+package it.uniroma2.query1.spout;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.storm.spout.SpoutOutputCollector;
