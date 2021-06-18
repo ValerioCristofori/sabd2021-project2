@@ -6,24 +6,24 @@ import it.uniroma2.query1.bolt.FilterMarOccidentaleBolt;
 import it.uniroma2.query1.bolt.ParserCellaBolt;
 import it.uniroma2.query1.bolt.RabbitMQExporterBolt;
 import it.uniroma2.query1.bolt.ShipCountBolt;
-import it.uniroma2.query1.spout.EntrySpout;
+import it.uniroma2.query.spout.EntrySpout;
+import it.uniroma2.query.Query;
 import org.apache.storm.Config;
-import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.AuthorizationException;
+import org.apache.storm.generated.InvalidTopologyException;
 
 import it.uniroma2.utils.LogController;
 import org.apache.storm.tuple.Fields;
 
-public class Query1 {
+public class Query1 extends Query {
 
-	private static final String RABBITMQ_HOST = "rabbitmq";
-	private static final String RABBITMQ_USER = "rabbitmq";
-	private static final String RABBITMQ_PASS = "rabbitmq";
 	private static final String RABBITMQ_QUEUE = "query1_queue";
-	private TopologyBuilder builder;
 	
-	public Query1(String[] args) throws SecurityException, IOException {
+	public Query1(String[] args) throws SecurityException, IOException, AuthorizationException, InvalidTopologyException, AlreadyAliveException {
 		if( args != null && args.length > 0 ) {
-			this.builder = new TopologyBuilder();
+
 			builder.setSpout("spout", new EntrySpout(), 5);
 
 			builder.setBolt("filterMarOccidentale", new FilterMarOccidentaleBolt(), 5)
@@ -36,21 +36,14 @@ public class Query1 {
 
 	        builder.setBolt("count", new ShipCountBolt(), 12)
 	               .fieldsGrouping("parser", new Fields("type"));
-	
-	        Config conf = new Config();
-	        conf.setDebug(true);
-	        
-	        
 
-            builder.setBolt("exporter",
-                  new RabbitMQExporterBolt(
-                           RABBITMQ_HOST, RABBITMQ_USER,
-                            RABBITMQ_PASS, RABBITMQ_QUEUE ),
+			builder.setBolt("exporter",
+					new RabbitMQExporterBolt(
+							RABBITMQ_HOST, RABBITMQ_USER,
+							RABBITMQ_PASS, RABBITMQ_QUEUE ),
 					3).shuffleGrouping("count");
 
-            conf.setNumWorkers(3);
-
-           // StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
+			super.submitTopology(args);
 
         } else {
 

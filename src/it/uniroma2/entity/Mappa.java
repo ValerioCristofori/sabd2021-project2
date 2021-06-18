@@ -15,11 +15,7 @@ public class Mappa {
     private static double dim_cella_y;
     private static double dim_x;
     private static double dim_y;
-    private static List<Nave> navi;
-
-    public Mappa(){
-        navi = new ArrayList<>();
-    }
+    private static List<Nave> navi = new ArrayList<>();
 
     public static void addShip(Nave nave){
         navi.add(nave);
@@ -32,11 +28,15 @@ public class Mappa {
         return null;
     }
 
-    private void setup(){
+    public static void setup(){
         dim_x = Math.abs( maxLon - minLon );
         dim_y = Math.abs( maxLat - minLat );
         dim_cella_x = dim_x/celle_x;
         dim_cella_y = dim_y/celle_y;
+    }
+
+    public static void cleanUp(){
+        navi.clear();
     }
 
     public String findRightCell( double lon, double lat ){
@@ -57,6 +57,8 @@ public class Mappa {
 
         return ret;
     }
+
+
 
 
 }
