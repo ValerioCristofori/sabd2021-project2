@@ -22,18 +22,16 @@ public class FilterMarOccidentaleBolt extends BaseRichBolt {
     public static final String TRIP_ID			        = "TRIP_ID";
 
     private double initialLat 	= 32.0;
-    private double finalLat 	= 45.0; 	// 40.125224422
-    private double initialLon = -6.0;
-    private double finalLon 	= 37.0;
+    private double finalLat 	= 45.0;
+    private double initialLon   = -6.0;
+    private double finalLon 	= 12.0; //canale di sicilia
 
     private static final long serialVersionUID = 1L;
     private OutputCollector _collector;
-    private SimpleDateFormat sdf;
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this._collector=collector;
-        this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     @Override
@@ -46,13 +44,10 @@ public class FilterMarOccidentaleBolt extends BaseRichBolt {
         String timestamp 	= tuple.getStringByField(TIMESTAMP);
         String trip_id  	= tuple.getStringByField(TRIP_ID);
 
-        Double lon = null;
-        Double lat = null;
-
         try{
 
-            lon = Double.parseDouble(lonString);
-            lat  = Double.parseDouble(latString);
+            Double lon = Double.parseDouble(lonString);
+            Double lat  = Double.parseDouble(latString);
             if (isOutsideGrid(lat, lon)){
                 _collector.ack(tuple);
                 return;
