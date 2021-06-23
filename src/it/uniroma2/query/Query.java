@@ -10,9 +10,11 @@ import org.apache.storm.topology.TopologyBuilder;
 
 public abstract class Query {
 
-    protected static final String RABBITMQ_HOST = "rabbitmq";
-    protected static final String RABBITMQ_USER = "rabbitmq";
-    protected static final String RABBITMQ_PASS = "rabbitmq";
+    public static String REDIS_URL;
+    public static int REDIS_PORT;
+    public static String RABBITMQ_HOST;
+    public static String RABBITMQ_USER;
+    public static String RABBITMQ_PASS;
     protected TopologyBuilder builder;
     protected Config conf;
 
@@ -43,5 +45,25 @@ public abstract class Query {
 
         // cluster
         StormSubmitter.submitTopology(args[0], conf, stormTopology);
+    }
+
+    public static void setRedisUrl(String redisUrl) {
+        REDIS_URL = redisUrl;
+    }
+
+    public static void setRedisPort(int redisPort) {
+        REDIS_PORT = redisPort;
+    }
+
+    public static void setRabbitmqHost(String rabbitmqHost) {
+        RABBITMQ_HOST = rabbitmqHost;
+    }
+
+    public static void setRabbitmqUser(String rabbitmqUser) {
+        RABBITMQ_USER = rabbitmqUser;
+    }
+
+    public static void setRabbitmqPass(String rabbitmqPass) {
+        RABBITMQ_PASS = rabbitmqPass;
     }
 }

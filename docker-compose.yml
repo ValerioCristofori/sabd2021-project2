@@ -23,15 +23,17 @@ services:
             - zookeeper
             - rabbitmq
             - storm-nimbus
+            - redis
         links:
             - zookeeper
             - rabbitmq
             - storm-nimbus
+            - redis
         entrypoint: /bin/bash
         stdin_open: true
         tty: true
         volumes: 
-            - ./data:/data
+            - ./dist:/data
   
     zookeeper:
         image: zookeeper
@@ -62,9 +64,11 @@ services:
             - rabbitmq
             - storm-nimbus
             - zookeeper
+            - redis
         links:
             - storm-nimbus
             - rabbitmq
+            - redis
             - zookeeper
         restart: always
 
@@ -76,10 +80,12 @@ services:
             - storm-nimbus
             - rabbitmq
             - zookeeper
+            - redis
         links:
             - rabbitmq
             - storm-nimbus
             - zookeeper
+            - redis
         restart: always
 
     worker3:
@@ -90,10 +96,12 @@ services:
             - storm-nimbus
             - rabbitmq
             - zookeeper
+            - redis
         links:
             - storm-nimbus
             - rabbitmq
             - zookeeper
+            - redis
         restart: always
 
     rabbitmq:
@@ -107,4 +115,9 @@ services:
             - "15672:15672"
             - "5672:5672"
 
-
+    redis:
+        image: redis:3.2-alpine
+        container_name: redis
+        restart: always
+        ports:
+            - "6379:6379"

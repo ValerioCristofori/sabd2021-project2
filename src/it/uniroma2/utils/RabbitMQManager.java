@@ -17,6 +17,8 @@ public class RabbitMQManager {
 
     private String defaultQueue;
 
+
+
     public RabbitMQManager(String host, String username, String password, String queue) {
         super();
         this.host = host;

@@ -2,14 +2,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>sabd2021-project2</groupId>
   <artifactId>sabd2021-project2</artifactId>
-  <version>v1.0</version>
+  <version>1.0</version>
   <dependencies>
-  	<dependency>
-  		<groupId>org.apache.storm</groupId>
-  		<artifactId>storm-core</artifactId>
-  		<version>1.1.0</version>
-        <scope>provided</scope>
-  	</dependency>
+      <dependency>
+          <groupId>org.apache.storm</groupId>
+          <artifactId>storm-core</artifactId>
+          <version>1.1.0</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>redis.clients</groupId>
+          <artifactId>jedis</artifactId>
+          <version>2.9.0</version>
+      </dependency>
       <!-- https://mvnrepository.com/artifact/au.com.bytecode/opencsv -->
       <dependency>
           <groupId>au.com.bytecode</groupId>
@@ -20,31 +25,37 @@
       <dependency>
           <groupId>com.rabbitmq</groupId>
           <artifactId>amqp-client</artifactId>
-          <version>5.12.0</version>
+          <version>4.0.0</version>
       </dependency>
-
-
-
+      <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
+          <version>2.7</version>
+      </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
-        <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-      	<groupId>org.apache.maven.plugins</groupId>
-      	<artifactId>maven-compiler-plugin</artifactId>
-      	<configuration>
-      		<source>1.8</source>
-      		<target>1.8</target>
-   		</configuration>
-	</plugin>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+            </configuration>
+        </plugin>
+        <plugin>
+            <!-- Build an executable JAR -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>it.uniroma2.main.DataSource</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
 	<plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>

@@ -1,18 +1,14 @@
 package it.uniroma2.query2;
 
-import it.uniroma2.query1.bolt.FilterMarOccidentaleBolt;
-import it.uniroma2.query1.bolt.ParserCellaBolt;
-import it.uniroma2.query1.bolt.RabbitMQExporterBolt;
-import it.uniroma2.query1.bolt.ShipCountBolt;
-import it.uniroma2.query.spout.EntrySpout;
-import it.uniroma2.query2.bolt.CountGradoFreqBolt;
-import it.uniroma2.query2.bolt.FilterMarOccidentaleOrientaleBolt;
-import it.uniroma2.query2.bolt.PartialRankBolt;
-import it.uniroma2.query2.bolt.RankBolt;
+import it.uniroma2.query1.operator.ParserCellaBolt;
+import it.uniroma2.query1.operator.RabbitMQExporterBolt;
+import it.uniroma2.query.operator.EntrySpout;
+import it.uniroma2.query2.operator.CountGradoFreqBolt;
+import it.uniroma2.query2.operator.FilterMarOccidentaleOrientaleBolt;
+import it.uniroma2.query2.operator.PartialRankBolt;
+import it.uniroma2.query2.operator.RankBolt;
 import it.uniroma2.utils.LogController;
 import it.uniroma2.query.Query;
-import org.apache.storm.Config;
-import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
