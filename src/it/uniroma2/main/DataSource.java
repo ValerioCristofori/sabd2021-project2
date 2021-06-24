@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import it.uniroma2.utils.Constants;
 import it.uniroma2.utils.LinesBatch;
+import it.uniroma2.utils.LogController;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
@@ -31,7 +32,7 @@ public class DataSource implements Runnable{
 
         this.filename = filename;
         this.jedis = new Jedis(redisUrl, redisPort, redisTimeout);
-        this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         this.gson = new Gson();
 
         initialize();
@@ -51,7 +52,7 @@ public class DataSource implements Runnable{
         try {
             System.out.println("Initializing... ");
             br = new BufferedReader(new FileReader(filename));
-
+            br.readLine();
             String line = br.readLine();
             linesBatch = new LinesBatch();
             long batchInitialTime 	= roundToCompletedMinute(getDropoffDatatime(line));
@@ -123,11 +124,10 @@ public class DataSource implements Runnable{
 
     }
 
-    private void send(LinesBatch linesBatch) throws JedisConnectionException{
+    private void send(LinesBatch linesBatch) throws JedisConnectionException, IOException {
 
         String consumed = jedis.get(Constants.REDIS_CONSUMED);
         String data = jedis.get(Constants.REDIS_DATA);
-
         /* Check erroneous situation */
         if (data != null && consumed != null){
 
@@ -140,7 +140,7 @@ public class DataSource implements Runnable{
         if (data != null && consumed == null){
 
             while (consumed == null){
-
+                //LogController.getSingletonInstance().saveMess("attendo consumo");
                 try {
                     Thread.sleep(SHORT_SLEEP);
                 } catch (InterruptedException e) { }
@@ -166,7 +166,7 @@ public class DataSource implements Runnable{
 
         try {
             String[] tokens	=	line.split(",");
-            Date dropoff = sdf.parse(tokens[3]);
+            Date dropoff = sdf.parse(tokens[7]);
             ts = dropoff.getTime();
 
         } catch (ParseException e) {
@@ -209,8 +209,8 @@ public class DataSource implements Runnable{
          * java -jar debs2015gc-1.0.jar it.uniroma2.debs2016gc.DataSource [debs dataset] [redis ip]
          */
 
-        String file = "/data/prj2_dataset_imported.csv";
-        //DataSource fill = new DataSource(file, "128.130.172.207", 6379);
+        String file = "data/prj2_dataset_imported.csv";
+        //DataSource fill = new DataSource(file, , 6379);
 		DataSource fill = new DataSource(file, "localhost", 6379);
         Thread th1 = new Thread(fill);
         th1.start();

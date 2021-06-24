@@ -3,7 +3,6 @@ build:
 	cp target/*-jar-with-dependencies.jar dist/.
 up:
 	docker-compose up -d
-	sh start-topology.sh
 down:
 	docker-compose down
 app:

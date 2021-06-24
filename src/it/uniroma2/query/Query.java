@@ -66,4 +66,20 @@ public abstract class Query {
     public static void setRabbitmqPass(String rabbitmqPass) {
         RABBITMQ_PASS = rabbitmqPass;
     }
+
+    public static String getRedisUrl() {
+        return REDIS_URL;
+    }
+
+    public static int getRedisPort() {
+        return REDIS_PORT;
+    }
+
+    public static String getRabbitmqHost() {
+        return RABBITMQ_HOST;
+    }
+
+    public static String getRabbitmqUser() {
+        return RABBITMQ_USER;
+    }
 }

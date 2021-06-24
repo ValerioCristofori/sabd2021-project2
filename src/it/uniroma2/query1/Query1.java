@@ -22,7 +22,7 @@ public class Query1 extends Query {
 	public Query1(String[] args) throws SecurityException, IOException, AuthorizationException, InvalidTopologyException, AlreadyAliveException {
 		if( args != null && args.length > 0 ) {
 
-			builder.setSpout("spout", new EntrySpout(), 5);
+			builder.setSpout("spout", new EntrySpout(getRedisUrl(),getRedisPort()), 5);
 
 			builder.setBolt("filterMarOccidentale", new FilterMarOccidentaleBolt(), 5)
 					.shuffleGrouping("spout");
@@ -33,7 +33,7 @@ public class Query1 extends Query {
 
 
 	        builder.setBolt("count", new ShipCountBolt(), 12)
-	               .fieldsGrouping("parser", new Fields("type"));
+	               .fieldsGrouping("parser", new Fields(ParserCellaBolt.SHIPTYPE));
 
 			builder.setBolt("exporter",
 					new RabbitMQExporterBolt(
@@ -41,6 +41,10 @@ public class Query1 extends Query {
 							RABBITMQ_PASS, RABBITMQ_QUEUE ),
 					3).shuffleGrouping("count");
 
+			if( args.length > 0 ){
+				//change topology name
+				args[0] += "-query1";
+			}
 			super.submitTopology(args);
 
         } else {

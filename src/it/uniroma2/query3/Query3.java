@@ -16,6 +16,11 @@ public class Query3 extends Query {
         if( args != null && args.length > 0 ) {
 
 
+            if( args.length > 0 ){
+                //change topology name
+                args[0] += "-query3";
+            }
+
         } else {
 
             LogController.getSingletonInstance().saveMess("Error: invalid number of arguments");

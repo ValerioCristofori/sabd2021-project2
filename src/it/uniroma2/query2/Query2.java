@@ -23,7 +23,7 @@ public class Query2 extends Query {
     public Query2(String[] args) throws SecurityException, IOException, AuthorizationException, InvalidTopologyException, AlreadyAliveException {
         if( args != null && args.length > 0 ) {
 
-            builder.setSpout("spout", new EntrySpout(), 5);
+            builder.setSpout("spout", new EntrySpout(getRedisUrl(),getRedisPort()), 5);
 
             builder.setBolt("filterMarOccidentaleOrientale", new FilterMarOccidentaleOrientaleBolt(), 5)
                     .shuffleGrouping("spout");
@@ -48,7 +48,10 @@ public class Query2 extends Query {
                             RABBITMQ_HOST, RABBITMQ_USER,
                             RABBITMQ_PASS, RABBITMQ_QUEUE ),
                     3).shuffleGrouping("rank");
-
+            if( args.length > 0 ){
+                //change topology name
+                args[0] += "-query2";
+            }
             super.submitTopology(args);
 
         } else {

@@ -44,11 +44,11 @@ public class QueryTopology {
 		Mappa.setup();
 		new Query1(args);
 
-		Mappa.cleanUp();
-		new Query2(args);
+		//Mappa.cleanUp();
+		//new Query2(args);
 
-		Mappa.cleanUp();
-		new Query3(args);
+		//Mappa.cleanUp();
+		//new Query3(args);
 
 	}
 	
