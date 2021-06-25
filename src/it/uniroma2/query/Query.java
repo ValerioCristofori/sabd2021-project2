@@ -27,7 +27,7 @@ public abstract class Query {
         StormTopology stormTopology = builder.createTopology();
         /* Create configurations */
         conf = new Config();
-        conf.setDebug(true);
+        conf.setDebug(false);
         /* number of workers to create for current topology */
         conf.setNumWorkers(3);
 

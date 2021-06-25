@@ -1,6 +1,5 @@
 package it.uniroma2.query2;
 
-import it.uniroma2.query1.operator.ParserCellaBolt;
 import it.uniroma2.query1.operator.RabbitMQExporterBolt;
 import it.uniroma2.query.operator.EntrySpout;
 import it.uniroma2.query2.operator.CountGradoFreqBolt;

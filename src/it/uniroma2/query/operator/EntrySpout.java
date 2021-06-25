@@ -3,6 +3,7 @@ package it.uniroma2.query.operator;
 import com.google.gson.Gson;
 import it.uniroma2.utils.Constants;
 import it.uniroma2.utils.LinesBatch;
+import it.uniroma2.utils.LogController;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -12,6 +13,7 @@ import org.apache.storm.tuple.Values;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class EntrySpout extends BaseRichSpout {
@@ -54,7 +56,7 @@ public class EntrySpout extends BaseRichSpout {
             String data = jedis.get(Constants.REDIS_DATA);
 
             while (data == null){
-
+                LogController.getSingletonInstance().saveMess("(SPOUT) data is null ");
                 try {
                     Thread.sleep(SHORT_SLEEP);
                 } catch (InterruptedException e) { }
@@ -82,7 +84,7 @@ public class EntrySpout extends BaseRichSpout {
             jedis.set(Constants.REDIS_CONSUMED, "true");
 
 
-        } catch (JedisConnectionException e) {
+        } catch (JedisConnectionException | IOException e) {
             e.printStackTrace();
             jedis = new Jedis(redisUrl, redisPort, redisTimeout);
         }

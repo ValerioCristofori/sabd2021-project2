@@ -2,8 +2,8 @@ package it.uniroma2.query1;
 
 import java.io.IOException;
 
-import it.uniroma2.query1.operator.FilterMarOccidentaleBolt;
-import it.uniroma2.query1.operator.ParserCellaBolt;
+import it.uniroma2.query1.operator.MetronomeBolt;
+import it.uniroma2.query1.operator.ParserAndFilterBolt;
 import it.uniroma2.query1.operator.RabbitMQExporterBolt;
 import it.uniroma2.query1.operator.ShipCountBolt;
 import it.uniroma2.query.operator.EntrySpout;
@@ -21,19 +21,17 @@ public class Query1 extends Query {
 	
 	public Query1(String[] args) throws SecurityException, IOException, AuthorizationException, InvalidTopologyException, AlreadyAliveException {
 		if( args != null && args.length > 0 ) {
+			builder.setSpout("spout", new EntrySpout(getRedisUrl(),getRedisPort()));
 
-			builder.setSpout("spout", new EntrySpout(getRedisUrl(),getRedisPort()), 5);
-
-			builder.setBolt("filterMarOccidentale", new FilterMarOccidentaleBolt(), 5)
+			builder.setBolt("parserfilter", new ParserAndFilterBolt())
 					.shuffleGrouping("spout");
 
-	        builder.setBolt("parser", new ParserCellaBolt(), 4)
-	                .shuffleGrouping("filterMarOccidentale");
 	        //metronome
+			builder.setBolt("metronome", new MetronomeBolt())
+					.shuffleGrouping("parserfilter");
 
-
-	        builder.setBolt("count", new ShipCountBolt(), 12)
-	               .fieldsGrouping("parser", new Fields(ParserCellaBolt.SHIPTYPE));
+	        builder.setBolt("count", new ShipCountBolt())
+	               .fieldsGrouping("parserfilter", new Fields(ParserAndFilterBolt.SHIPTYPE));
 
 			builder.setBolt("exporter",
 					new RabbitMQExporterBolt(

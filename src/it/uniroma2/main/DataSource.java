@@ -210,8 +210,7 @@ public class DataSource implements Runnable{
          */
 
         String file = "data/prj2_dataset_imported.csv";
-        //DataSource fill = new DataSource(file, , 6379);
-		DataSource fill = new DataSource(file, "localhost", 6379);
+		DataSource fill = new DataSource(file, "10.0.2.15", 6379);
         Thread th1 = new Thread(fill);
         th1.start();
     }

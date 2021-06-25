@@ -19,13 +19,13 @@ public class TConf {
     private static int 	 DEFAULT_NUM_TASKS = 32;
 
     public static String REDIS_URL  = "redis.url";
-    private static String DEFAULT_REDIS_URL 	= "redis";
+    private static String DEFAULT_REDIS_URL 	= "localhost";
 
     public static String REDIS_PORT = "redis.port";
     private static int 	 DEFAULT_REDIS_PORT = 6379;
 
     public static String  RABBITMQ_HOST = "rabbitmq.host";
-    private static String DEFAULT_RABBITMQ_HOST = "rabbitmq";
+    private static String DEFAULT_RABBITMQ_HOST = "localhost";
 
     public static String  RABBITMQ_USERNAME = "rabbitmq.username";
     private static String DEFAULT_RABBITMQ_USERNAME = "rabbitmq";
