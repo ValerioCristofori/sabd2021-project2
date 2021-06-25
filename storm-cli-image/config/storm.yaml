@@ -1,4 +1,0 @@
-storm.zookeeper.servers: [zookeeper]
-nimbus.seeds: [nimbus]
-storm.log.dir: "/logs"
-storm.local.dir: "/storm-data"
