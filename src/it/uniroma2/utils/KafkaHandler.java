@@ -1,7 +1,10 @@
 package it.uniroma2.utils;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
@@ -17,14 +20,17 @@ public class KafkaHandler {
 
     public static Properties getProperties( String propCase ){
         Properties prop = new Properties();
+        prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ADDRESS); //broker
         if( propCase.equals("injector") ) {
-            prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ADDRESS); //broker
-            prop.put( ProducerConfig.CLIENT_ID_CONFIG, "consumer-group-id" ); // consumer group
-            prop.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
+            prop.put( ProducerConfig.CLIENT_ID_CONFIG, "producer-flink" ); // consumer group
+            prop.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName()); //serializzazione key value
             prop.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         }else if( propCase.equals("consumer") ) {
-
+            prop.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-flink"); // producer group id
+            prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // per iniziare a leggere dall'inizio della partizione ( se no offset )
+            prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName()); //deserializzazione key value
+            prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         }else if( propCase.equals("producer") ) {
 
         }else if( propCase.equals("csv_output") ) {
