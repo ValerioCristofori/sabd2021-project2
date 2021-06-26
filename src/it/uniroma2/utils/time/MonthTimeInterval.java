@@ -22,9 +22,9 @@ public class MonthTimeInterval implements TimeInterval{
         return new MonthWindowAssigner();
     }
 
-    protected static class MonthWindowAssigner extends TumblingEventTimeWindows{
+    public static class MonthWindowAssigner extends TumblingEventTimeWindows{
 
-        protected MonthWindowAssigner() {
+        public MonthWindowAssigner() {
             super(1, 0, WindowStagger.ALIGNED);
         }
 

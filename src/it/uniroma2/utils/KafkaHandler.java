@@ -32,7 +32,8 @@ public class KafkaHandler {
             prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName()); //deserializzazione key value
             prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         }else if( propCase.equals("producer") ) {
-
+            prop.put(ProducerConfig.CLIENT_ID_CONFIG, "producer");
+            prop.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); //semantica exactly once
         }else if( propCase.equals("csv_output") ) {
 
         }

@@ -23,9 +23,9 @@ public class WeekTimeInterval implements TimeInterval{
         return new WeekWindowAssigner();
     }
 
-    protected static class WeekWindowAssigner extends TumblingEventTimeWindows{
+    public static class WeekWindowAssigner extends TumblingEventTimeWindows{
 
-        protected WeekWindowAssigner() {
+        public WeekWindowAssigner() {
             super(1, 0, WindowStagger.ALIGNED);
         }
 
