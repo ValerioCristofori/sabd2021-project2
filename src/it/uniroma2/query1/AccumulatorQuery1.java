@@ -1,11 +1,12 @@
 package it.uniroma2.query1;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AccumulatorQuery1 {
+public class AccumulatorQuery1 implements Serializable {
 
     private Map<String, List<String>> mapForResult; //K e' il tipo, V e' la lista di tutti trip
     // trip per evitare duplicati dati da stesse navi con diverse rotte ( trip e' la chiave del dataset )

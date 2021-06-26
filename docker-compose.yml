@@ -25,6 +25,8 @@ services:
         ports:
             - "8081:8081"
         command: jobmanager
+        volumes:
+        -   ./dist:/data
         environment:
             - |
                 FLINK_PROPERTIES=

@@ -2,7 +2,9 @@ package it.uniroma2.entity;
 
 import it.uniroma2.utils.DifferentShipTypes;
 
-public class EntryData {
+import java.io.Serializable;
+
+public class EntryData implements Serializable {
 
     private String tripId;
     private String shipId;

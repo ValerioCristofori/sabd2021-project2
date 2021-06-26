@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class DataSource {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
-    private static final String path = "dist/data/prj2_dataset_imported.csv";
+    private static final String path = "data/prj2_dataset_imported.csv";
     private static final long timeRange = 5;
     private static Map<Long, List<String>> map;
     private static long min = Long.MIN_VALUE;

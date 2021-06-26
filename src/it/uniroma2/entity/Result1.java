@@ -1,11 +1,12 @@
 package it.uniroma2.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Result1 {
+public class Result1 implements Serializable{
 
     private Date timestamp;
     private String cella;

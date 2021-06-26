@@ -43,6 +43,9 @@ public class Query1 {
     }
 
     private void run() {
+
+        final int numDaysInterval = this.numDaysInteval;
+
         DataStream<EntryData> stream = dataStream.map( (MapFunction<Tuple2<Long, String>, EntryData>) entry -> {
             String[] records = entry.f1.split(",");
             return new EntryData(records[0],Double.parseDouble(records[3]),
@@ -65,6 +68,10 @@ public class Query1 {
             log.warning("Time interval not valid");
             System.exit(1);
         }
+        if( windowedStream == null ){
+            log.warning("Null error on windowed stream");
+            System.exit(1);
+        }
 
         windowedStream.aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1())
                 .map( (MapFunction<Result1, String>) resultQuery1 -> {
@@ -76,7 +83,7 @@ public class Query1 {
                             .append(resultQuery1.getCella())
                             .append(",");
                     resultQuery1.getResultMap().forEach( (key,value) -> {
-                        entryResultBld.append(key).append(",").append(String.format( "%.2f", (double) value/this.numDaysInteval));
+                        entryResultBld.append(key).append(",").append(String.format( "%.2f", (double) value/numDaysInterval));
 
                     });
                     return entryResultBld.toString();

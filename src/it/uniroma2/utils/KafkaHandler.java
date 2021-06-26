@@ -35,7 +35,12 @@ public class KafkaHandler {
             prop.put(ProducerConfig.CLIENT_ID_CONFIG, "producer");
             prop.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); //semantica exactly once
         }else if( propCase.equals("csv_output") ) {
-
+            prop.put(ConsumerConfig.GROUP_ID_CONFIG, "csv-consumer");
+            // start reading from beginning of partition if no offset was created
+            prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            // key and value deserializers
+            prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName());
+            prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         }
 
         return prop;
