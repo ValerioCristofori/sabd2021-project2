@@ -73,5 +73,6 @@
     <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka_2.12:1.13.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-base:1.13.1" level="project" />
+    <orderEntry type="library" name="Maven: au.com.bytecode:opencsv:2.4" level="project" />
   </component>
 </module>
