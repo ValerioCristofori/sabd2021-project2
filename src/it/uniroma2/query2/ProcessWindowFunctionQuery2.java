@@ -8,7 +8,13 @@ import org.apache.flink.util.Collector;
 import java.util.Date;
 
 public class ProcessWindowFunctionQuery2  {
-
+    @Override
+    public void process(String cella, Context context, Iterable<Result2> iterable, Collector<Result2> collector) {
+        Result2 query2Result = iterable.iterator().next();
+        query2Result.setDate(new Date(context.window().getStart()));
+        query2Result.setMare(cella);
+        collector.collect(query2Result);
+    }
 
 }
 

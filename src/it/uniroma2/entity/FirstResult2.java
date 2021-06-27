@@ -47,4 +47,9 @@ public class FirstResult2 {
         this.frequentazione = frequentazione;
     }
 
+    public int getHourInDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
 }

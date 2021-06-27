@@ -6,19 +6,19 @@ public class FirstAccumulatorQuery2 {
 
     List<String> frequentazioni;
 
-    public void setFrequentazioni(List<String> frequentazioni){
-        this.frequentazioni = frequentazioni;
-    }
-
     public List<String> getFrequentazioni{
         return frequentazioni;
     }
 
+    public void setFrequentazioni(List<String> frequentazioni){
+        this.frequentazioni = frequentazioni;
+    }
+
     public FirstAccumulatorQuery2(){
+        frequentazioni = new List<>();
     }
 
     public void add(String trip){
         frequentazioni.add(trip);
     }
-    // no devo fare qualche controllo
 }

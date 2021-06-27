@@ -50,10 +50,23 @@ public class Query2 {
 //                .name("filtered-orientale-stream");
 
 
+                //........
+        // keyed ---> windowed.....
+
+
+        // questo sotto devo farlo per firstAggergator e firstPWF
+        // che cosa fa?????
+        windowedStream.aggregate( new AggregatorQuery2(), new ProcessWindowFunctionQuery2())
+                .map( (MapFunction<Result2, String>) resultQuery2 -> {
+                    StringBuilder entryResultBld = new StringBuilder();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date timestampInit = resultQuery1.getTimestamp();
 
 
 
 
 
-    }
+                }
+
+
 }
