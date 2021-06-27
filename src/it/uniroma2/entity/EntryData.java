@@ -25,6 +25,8 @@ public class EntryData implements Serializable {
         this.cella = Mappa.findRightCell(lon,lat);
     }
 
+    public EntryData(String record, String record1, double lat, double parseDouble, int timestamp, Long f0, String record2) {
+    }
 
 
     public String getTripId() {
