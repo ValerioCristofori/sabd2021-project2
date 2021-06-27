@@ -9,23 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
-public class WeekTimeInterval implements TimeInterval{
+public class TwoHourWindowAssigner extends TumblingEventTimeWindows{
 
-    private static final String timeType = "week";
-
-    @Override
-    public String getTimeType() {
-        return timeType;
-    }
-
-    @Override
-    public TumblingEventTimeWindows getTimeIntervalClass() {
-        return new WeekWindowAssigner();
-    }
-
-    public static class WeekWindowAssigner extends TumblingEventTimeWindows{
-
-        public WeekWindowAssigner() {
+        public TwoHourWindowAssigner() {
             super(1, 0, WindowStagger.ALIGNED);
         }
 
@@ -34,14 +20,12 @@ public class WeekTimeInterval implements TimeInterval{
             Calendar calendar = Calendar.getInstance();
 
             calendar.setTime(new Date(timestamp));
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            calendar.set(Calendar.DAY_OF_WEEK, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 1);
             long startDate = calendar.getTimeInMillis();
-            calendar.add(Calendar.WEEK_OF_YEAR,1);
+            calendar.add(Calendar.HOUR,2);
             return Collections.singletonList(new TimeWindow(startDate, calendar.getTimeInMillis()));
         }
     }
-}

@@ -1,7 +1,9 @@
 package it.uniroma2.main;
 
+import it.uniroma2.entity.Mappa;
 import it.uniroma2.query1.Query1;
 import it.uniroma2.query2.Query2;
+import it.uniroma2.query3.Query3;
 import it.uniroma2.utils.KafkaHandler;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -48,11 +50,15 @@ public class FlinkMain {
     public static void main( String[] args ){
 
         DataStream<Tuple2<Long,String>> dataStream = setup(); // tupla: timestamp, list record
+        Mappa.setup(); //setup della mappa per il calcolo della dimensione delle celle
 
         new Query1(dataStream, "week");
         new Query1(dataStream, "month");
 
         //new Query2(dataStream);
+
+        //new Query3(dataStream,"one-hour");
+        //new Query3(dataStream,"two-hour");
 
         try {
             env.execute();

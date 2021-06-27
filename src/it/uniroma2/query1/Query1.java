@@ -3,12 +3,10 @@ package it.uniroma2.query1;
 import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Result1;
 import it.uniroma2.utils.KafkaHandler;
-import it.uniroma2.utils.time.MonthTimeInterval;
-import it.uniroma2.utils.time.TimeInterval;
-import it.uniroma2.utils.time.WeekTimeInterval;
+import it.uniroma2.utils.time.MonthWindowAssigner;
+import it.uniroma2.utils.time.WeekWindowAssigner;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
@@ -60,10 +58,10 @@ public class Query1 {
         WindowedStream<EntryData,String, TimeWindow> windowedStream = null;
         if( timeIntervalType.equals("week") ){
             windowedStream = filteredMarOccidentaleStream.keyBy( EntryData::getCella )
-                    .window( new WeekTimeInterval.WeekWindowAssigner() );
+                    .window( new WeekWindowAssigner() );
         }else if( timeIntervalType.equals("month") ){
             windowedStream = filteredMarOccidentaleStream.keyBy( EntryData::getCella )
-                    .window( new MonthTimeInterval.MonthWindowAssigner() );
+                    .window( new MonthWindowAssigner() );
         }else{
             log.warning("Time interval not valid");
             System.exit(1);
