@@ -1,6 +1,10 @@
 package it.uniroma2.query2;
 
-public class AggregatorQuery2 implements AggregateFunction<Query2IntermediateOutcome, Query2Outcome, Query2Outcome> {
+import it.uniroma2.entity.FirstResult2;
+import it.uniroma2.entity.Result2;
+import org.apache.flink.api.common.functions.AggregateFunction;
+
+public class AggregatorQuery2 implements AggregateFunction<FirstResult2, Result2, Result2> {
 
     @Override
     public Result2 createAccumulator() {

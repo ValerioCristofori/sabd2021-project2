@@ -1,6 +1,12 @@
 package it.uniroma2.query2;
 
-public class FirstAggregatorQuery2 {
+import it.uniroma2.entity.EntryData;
+import it.uniroma2.entity.FirstResult2;
+import it.uniroma2.entity.Result1;
+import it.uniroma2.query1.AccumulatorQuery1;
+import org.apache.flink.api.common.functions.AggregateFunction;
+
+public class FirstAggregatorQuery2 implements AggregateFunction<EntryData, FirstAccumulatorQuery2, FirstResult2> {
 
     @Override
     public FirstAccumulatorQuery2 createAccumulator() {
@@ -16,7 +22,7 @@ public class FirstAggregatorQuery2 {
     @Override
     public FirstAccumulatorQuery2 merge(FirstAccumulatorQuery2 accumulator1, FirstAccumulatorQuery2 accumulator2) {
         accumulator2.getFrequentazioni().forEach(accumulator1::add);
-        return acc1;
+        return accumulator1;
     }
 
     @Override

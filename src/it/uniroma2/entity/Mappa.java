@@ -12,7 +12,17 @@ public class Mappa {
     private static double dim_cella_y;
     private static double dim_x;
     private static double dim_y;
+    private static final double canaleDiSiciliaLon = 12.0;
 
+    public static double getCanaleDiSiciliaLon() {
+        return canaleDiSiciliaLon;
+    }
+
+    public static double getLonByCella(String cella){
+        int lonCella = Integer.parseInt(cella.substring(1));
+        double lon = (lonCella * dim_cella_x) + minLon - (dim_cella_x/2);
+        return lon;
+    }
 
     public static void setup(){
         dim_x = Math.abs( maxLon - minLon );
@@ -35,7 +45,7 @@ public class Mappa {
             double max_j_lat = j*dim_cella_y + minLat;
             if( lat > min_j_lat || lat <= max_j_lat ) break;
         }
-        ret = String.format( "%s-%d", list_y[j - 1], i);
+        ret = String.format( "%s%d", list_y[j - 1], i);
 
         return ret;
     }

@@ -55,10 +55,11 @@ public class FlinkMain {
         new Query1(dataStream, "week");
         new Query1(dataStream, "month");
 
-        //new Query2(dataStream);
+        new Query2(dataStream, "week");
+        new Query2(dataStream, "month");
 
-        //new Query3(dataStream,"one-hour");
-        //new Query3(dataStream,"two-hour");
+        new Query3(dataStream,"one-hour");
+        new Query3(dataStream,"two-hour");
 
         try {
             env.execute();

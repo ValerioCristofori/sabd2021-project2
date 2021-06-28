@@ -1,29 +1,31 @@
 package it.uniroma2.query3;
 
-import it.uniroma2.entity.EntryData;
+import it.uniroma2.entity.FirstResult2;
+import it.uniroma2.entity.Result2;
+import it.uniroma2.query3.ranking.RankingTrip;
 import it.uniroma2.query3.ranking.Trip;
 import org.apache.flink.api.common.functions.AggregateFunction;
 
-public class AggregatorQuery3 implements AggregateFunction<EntryData, AccumulatorQuery3, Trip> {
+public class AggregatorQuery3 implements AggregateFunction<Trip, RankingTrip, RankingTrip> {
     @Override
-    public AccumulatorQuery3 createAccumulator() {
-        return new AccumulatorQuery3();
+    public RankingTrip createAccumulator() {
+        return new RankingTrip();
     }
 
     @Override
-    public AccumulatorQuery3 add(EntryData entryData, AccumulatorQuery3 accumulatorQuery3) {
-        accumulatorQuery3.add( entryData.getLon(), entryData.getLat() );
-        return accumulatorQuery3;
+    public RankingTrip add(Trip trip, RankingTrip accumulator) {
+        accumulator.add(trip);
+        return accumulator;
     }
 
     @Override
-    public Trip getResult(AccumulatorQuery3 accumulatorQuery3) {
-        return new Trip( accumulatorQuery3.getDistanzaTotale() );
+    public RankingTrip getResult(RankingTrip accumulator) {
+        return accumulator;
     }
 
     @Override
-    public AccumulatorQuery3 merge(AccumulatorQuery3 acc1, AccumulatorQuery3 acc2) {
-        acc1.setDistanzaTotale( acc1.getDistanzaTotale() + acc2.getDistanzaTotale());
+    public RankingTrip merge(RankingTrip acc1, RankingTrip acc2) {
+        acc2.getRanking().forEach(acc1::addTrip);
         return acc1;
     }
 }

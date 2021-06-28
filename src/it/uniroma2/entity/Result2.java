@@ -1,8 +1,13 @@
 package it.uniroma2.entity;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 public class Result2 {
 
-    private Date date;
+    private Date timestamp;
     private List<FirstResult2> am3;
     private List<FirstResult2> pm3;
     private String mare;
@@ -24,8 +29,12 @@ public class Result2 {
         return pm3;
     }
 
-    public Date getDate(){
-        return date;
+    public Date getTimestamp(){
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp){
+        this.timestamp = timestamp;
     }
 
     public String getMare(){
@@ -79,7 +88,7 @@ public class Result2 {
 
     public void add(FirstResult2 firstResult){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(firstResult.getDate());
+        calendar.setTime(firstResult.getTimestamp());
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         if(hourOfDay < 12){
             amAdd(firstResult);
