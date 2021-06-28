@@ -1,6 +1,7 @@
 package it.uniroma2.query1;
 
 import it.uniroma2.entity.EntryData;
+import it.uniroma2.entity.Mappa;
 import it.uniroma2.entity.Result1;
 import it.uniroma2.utils.KafkaHandler;
 import it.uniroma2.utils.time.MonthTimeInterval;
@@ -27,7 +28,6 @@ public class Query1 {
     private String timeIntervalType;
     private int numDaysInteval;
     private Logger log;
-    private static final double canaleDiSiciliaLon = 12.0;
     private Properties prop;
 
     public Query1(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
@@ -53,7 +53,7 @@ public class Query1 {
         });
 
         DataStream<EntryData> filteredMarOccidentaleStream = stream
-                .filter( (FilterFunction<EntryData>) entry -> entry.getLon() < canaleDiSiciliaLon)
+                .filter( (FilterFunction<EntryData>) entry -> entry.getLon() < Mappa.getCanaleDiSiciliaLon())
                 .name("filtered-stream");
 
         // keyed and windowed stream
