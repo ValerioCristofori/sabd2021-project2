@@ -34,7 +34,7 @@ public class Query2 {
     private static final double canaleDiSiciliaLon = 12.0;
     private Properties prop;
 
-    public Query2(DataStream<Tuple2<Long, String>> dataStream) {
+    public Query2(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
         this.dataStream = dataStream;
         this.timeIntervalType = timeIntervalType;
         if (timeIntervalType.equals("week")){
@@ -141,7 +141,7 @@ public class Query2 {
             }).name( "query2-"+this.timeIntervalType)
             .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2 + this.timeIntervalType,
                     new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2 + this.timeIntervalType),
-                    prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE));;
+                    prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE));
 
     }
 

@@ -4,13 +4,13 @@ import it.uniroma2.entity.Mappa;
 
 import java.io.Serializable;
 
-public class AccumulatorQuery3 implements Serializable {
+public class FirstAccumulatorQuery3 implements Serializable {
 
     double distanzaTotale;
     double lastLon;
     double lastLat;
 
-    public AccumulatorQuery3(){
+    public FirstAccumulatorQuery3(){
         this.distanzaTotale = 0;
         this.lastLon = Double.MAX_VALUE;
         this.lastLat = Double.MAX_VALUE;
