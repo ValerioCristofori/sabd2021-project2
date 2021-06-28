@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp ./dist/sabd2021-project2-1.0-jar-with-dependencies.jar it.uniroma2.main.Writer 1
+java -cp ./dist/sabd2021-project2-1.0-jar-with-dependencies.jar it.uniroma2.main.ConsumerTopic 1
