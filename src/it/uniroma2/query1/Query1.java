@@ -85,6 +85,7 @@ public class Query1 {
                         entryResultBld.append(key).append(",").append(String.format( "%.2f", (double) value/numDaysInterval));
 
                     });
+                    System.out.println(entryResultBld.toString());
                     return entryResultBld.toString();
                 } ).name( "query1-"+this.timeIntervalType)
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType,

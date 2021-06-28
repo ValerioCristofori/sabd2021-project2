@@ -14,6 +14,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 
@@ -34,17 +35,18 @@ public class FlinkMain {
         // assegno i watermarks per la granularita' del minuto
         consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
 
-        return env.addSource(consumer).flatMap( new Splitter() ).name("source");
+        return env.addSource(consumer).flatMap( new FlatMapFunction<String, Tuple2<Long, String>>() {
+            @Override
+            public void flatMap(String s, Collector<Tuple2<Long, String>> out) throws ParseException {
 
-    }
+                System.out.println(s);
+                String[] records = s.split(",");
+                Long timestamp = sdf.parse(records[7]).getTime();
+                out.collect(new Tuple2<>(timestamp,s));
 
-    public static class Splitter implements FlatMapFunction<String, Tuple2<Long, String>> {
-        @Override
-        public void flatMap(String sentence, Collector<Tuple2<Long,String>> out) throws Exception {
-            String[] records = sentence.split(",");
-            Long timestamp = sdf.parse(records[7]).getTime();
-            out.collect(new Tuple2<>(timestamp,sentence));
-        }
+            }
+        }).name("source");
+
     }
 
     public static void main( String[] args ){
@@ -55,17 +57,28 @@ public class FlinkMain {
         new Query1(dataStream, "week");
         new Query1(dataStream, "month");
 
-        new Query2(dataStream, "week");
-        new Query2(dataStream, "month");
+        //new Query2(dataStream, "week");
+        //new Query2(dataStream, "month");
 
-        new Query3(dataStream,"one-hour");
-        new Query3(dataStream,"two-hour");
+        //new Query3(dataStream,"one-hour");
+        //new Query3(dataStream,"two-hour");
 
         try {
             env.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        /* Metriche: ci aspettiamo throughput alto e bassa latenza
+        *
+        * per fare tracking della latenza devo settare latencyTrackingInterval a un numero positivo nella Flink configuration o ExecutionConfig
+        * al latencyTrackingInterval, le sorgenti emettono periodicamente il record LatencyMarker
+        * che contiene un timestamp di quando il record è stato emesso
+        *
+        * https://www.programmersought.com/article/32946124698/
+        *
+        * */
+
 
     }
 }
