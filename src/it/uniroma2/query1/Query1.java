@@ -3,6 +3,7 @@ package it.uniroma2.query1;
 import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Mappa;
 import it.uniroma2.entity.Result1;
+import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.utils.KafkaHandler;
 import it.uniroma2.utils.time.MonthWindowAssigner;
 import it.uniroma2.utils.time.WeekWindowAssigner;

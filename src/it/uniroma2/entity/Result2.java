@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Result2 {
 
-    private Date date;
+    private Date timestamp;
     private List<FirstResult2> am3;
     private List<FirstResult2> pm3;
     private String mare;
@@ -29,11 +29,12 @@ public class Result2 {
         return pm3;
     }
 
-    public Date getDate(){
-        return date;
+    public Date getTimestamp(){
+        return timestamp;
     }
-    public void setDate(Date date){
-        this.date = date;
+
+    public void setTimestamp(Date timestamp){
+        this.timestamp = timestamp;
     }
 
     public String getMare(){

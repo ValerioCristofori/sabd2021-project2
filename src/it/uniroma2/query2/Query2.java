@@ -2,22 +2,26 @@ package it.uniroma2.query2;
 
 import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.FirstResult2;
+import it.uniroma2.entity.Result2;
+import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.utils.KafkaHandler;
-import it.uniroma2.utils.time.MonthTimeInterval;
-import it.uniroma2.utils.time.WeekTimeInterval;
+import it.uniroma2.utils.time.MonthWindowAssigner;
+import it.uniroma2.utils.time.WeekWindowAssigner;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.runtime.state.Keyed;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -74,9 +78,9 @@ public class Query2 {
         // per le due finestre temporali di una settimana e un mese
         WindowedStream<FirstResult2, Tuple2<String, Integer>, TimeWindow> firstWindowedStream = null;
         if( timeIntervalType.equals("week") ){
-            firstWindowedStream = firstKeyedStream.window( new WeekTimeInterval.WeekWindowAssigner() );
+            firstWindowedStream = firstKeyedStream.window( new WeekWindowAssigner() );
         }else if( timeIntervalType.equals("month") ){
-            firstWindowedStream = firstKeyedStream.window( new MonthTimeInterval.MonthWindowAssigner() );
+            firstWindowedStream = firstKeyedStream.window( new MonthWindowAssigner() );
         }else{
             log.warning("Time interval not valid");
             System.exit(1);
@@ -99,9 +103,9 @@ public class Query2 {
 
         WindowedStream<FirstResult2, String, TimeWindow> windowedStream = null;
         if( timeIntervalType.equals("week") ){
-            windowedStream = keyedStream.window( new WeekTimeInterval.WeekWindowAssigner() );
+            windowedStream = keyedStream.window( new WeekWindowAssigner() );
         }else if( timeIntervalType.equals("month") ){
-            windowedStream = keyedStream.window( new MonthTimeInterval.MonthWindowAssigner() );
+            windowedStream = keyedStream.window( new MonthWindowAssigner() );
         }else{
             log.warning("Time interval not valid");
             System.exit(1);
@@ -111,13 +115,34 @@ public class Query2 {
             System.exit(1);
         }
 
-        
+        // aggregazione finale per il ranking
+        windowedStream.aggregate(new AggregatorQuery2(), new ProcessWindowFunctionQuery2())
+                .map((MapFunction<Result2, String>) resultQuery2 -> {
+            StringBuilder entryResultBld = new StringBuilder();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date timestampInit = resultQuery2.getTimestamp();
+            entryResultBld.append(simpleDateFormat.format(timestampInit))
+                .append(",")
+                    .append(resultQuery2.getMare()).append(",")
+                    .append("AM");
 
+            for(FirstResult2 res : resultQuery2.getAm3()){
+                entryResultBld.append(",").append(res.getCella());
+            }
 
+            entryResultBld.append(",").append("PM");
+
+            for(FirstResult2 res : resultQuery2.getPm3()){
+                entryResultBld.append(",").append(res.getCella());
+            }
+
+            return entryResultBld.toString();
+
+            }).name( "query2-"+this.timeIntervalType)
+            .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2 + this.timeIntervalType,
+                    new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2 + this.timeIntervalType),
+                    prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE));;
 
     }
-
-
-
 
 }
