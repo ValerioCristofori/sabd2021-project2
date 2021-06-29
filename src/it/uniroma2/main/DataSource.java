@@ -62,7 +62,7 @@ public class DataSource {
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
         String line;
-        reader.readLine(); //read header
+        reader.readLine();
         while ((line = reader.readLine()) != null) {
             String[] values = line.split(",");
             String dateString = values[7];

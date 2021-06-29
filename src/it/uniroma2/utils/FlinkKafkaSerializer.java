@@ -4,6 +4,7 @@ import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 
 public class FlinkKafkaSerializer implements KafkaSerializationSchema<String> {
 
@@ -16,6 +17,6 @@ public class FlinkKafkaSerializer implements KafkaSerializationSchema<String> {
 
     @Override
     public ProducerRecord<byte[], byte[]> serialize(String s, @Nullable Long aLong) {
-        return new ProducerRecord<>(topic, s.getBytes());
+        return new ProducerRecord<>(topic, s.getBytes(StandardCharsets.UTF_8));
     }
 }
