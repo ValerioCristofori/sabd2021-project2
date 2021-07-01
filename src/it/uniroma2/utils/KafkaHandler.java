@@ -29,6 +29,7 @@ public class KafkaHandler {
         }else if( propCase.equals("consumer") ) {
             prop.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-flink"); // producer group id
             prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // per iniziare a leggere dall'inizio della partizione ( se no offset )
+            prop.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed"); //exactly once semantic
             prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName()); //deserializzazione key value
             prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         }else if( propCase.equals("producer") ) {

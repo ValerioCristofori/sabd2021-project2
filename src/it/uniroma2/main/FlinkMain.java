@@ -7,6 +7,8 @@ import it.uniroma2.query3.Query3;
 import it.uniroma2.utils.KafkaHandler;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -25,9 +27,6 @@ public class FlinkMain {
 
 
     private static DataStream<Tuple2<Long,String>> setup(){
-
-        // faccio setup ambiente flink
-        env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // creo Flink consumer per kafka
         FlinkKafkaConsumer<String> consumer =
@@ -50,6 +49,10 @@ public class FlinkMain {
     }
 
     public static void main( String[] args ){
+
+        // faccio setup ambiente flink
+        Configuration conf = new Configuration();
+        env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
 
         DataStream<Tuple2<Long,String>> dataStream = setup(); // tupla: timestamp, list record
         Mappa.setup(); //setup della mappa per il calcolo della dimensione delle celle
