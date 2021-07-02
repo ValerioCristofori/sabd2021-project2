@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FlinkKafkaSerializer implements KafkaSerializationSchema<String> {
 
-    private String topic;
+    private final String topic;
 
     public FlinkKafkaSerializer( String topic ){
         super();

@@ -1,6 +1,6 @@
 package it.uniroma2.main;
 
-import it.uniroma2.utils.KafkaHandler;
+import it.uniroma2.kafka.KafkaHandler;
 import org.apache.kafka.clients.consumer.*;
 
 

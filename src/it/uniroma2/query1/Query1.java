@@ -4,7 +4,7 @@ import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Mappa;
 import it.uniroma2.entity.Result1;
 import it.uniroma2.utils.FlinkKafkaSerializer;
-import it.uniroma2.utils.KafkaHandler;
+import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.time.MonthWindowAssigner;
 import it.uniroma2.utils.time.WeekWindowAssigner;
 import org.apache.flink.api.common.functions.FilterFunction;
@@ -23,18 +23,18 @@ import java.util.logging.Logger;
 
 public class Query1 {
 
-    private DataStream<Tuple2<Long, String>> dataStream;
-    private String timeIntervalType;
+    private final DataStream<Tuple2<Long, String>> dataStream;
+    private final String timeIntervalType;
     private int numDaysInteval;
     private Logger log;
-    private Properties prop;
+    private final Properties prop;
 
     public Query1(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
         this.dataStream = dataStream;
         this.timeIntervalType = timeIntervalType;
-        if( timeIntervalType.equals("week") ){
+        if( timeIntervalType.equals("weekly") ){
             this.numDaysInteval = Calendar.DAY_OF_WEEK;
-        }else if( timeIntervalType.equals("month") ){
+        }else if( timeIntervalType.equals("monthly") ){
             this.numDaysInteval = Calendar.DAY_OF_MONTH;
         }
         this.prop = KafkaHandler.getProperties("producer");
@@ -57,10 +57,10 @@ public class Query1 {
 
         // keyed and windowed stream
         WindowedStream<EntryData,String, TimeWindow> windowedStream = null;
-        if( timeIntervalType.equals("week") ){
+        if( timeIntervalType.equals("weekly") ){
             windowedStream = filteredMarOccidentaleStream.keyBy( EntryData::getCella )
                     .window( new WeekWindowAssigner() );
-        }else if( timeIntervalType.equals("month") ){
+        }else if( timeIntervalType.equals("monthly") ){
             windowedStream = filteredMarOccidentaleStream.keyBy( EntryData::getCella )
                     .window( new MonthWindowAssigner() );
         }else{
@@ -85,7 +85,7 @@ public class Query1 {
                         entryResultBld.append(key).append(",").append(String.format( "%.2f", (double) value/numDaysInterval));
 
                     });
-                    System.out.println(entryResultBld.toString());
+                    System.out.println(entryResultBld);
                     return entryResultBld.toString();
                 } ).name( "query1-"+this.timeIntervalType)
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType,

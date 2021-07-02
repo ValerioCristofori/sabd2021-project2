@@ -8,8 +8,8 @@ import java.util.List;
 public class Result2 {
 
     private Date timestamp;
-    private List<FirstResult2> am3;
-    private List<FirstResult2> pm3;
+    private final List<FirstResult2> am3;
+    private final List<FirstResult2> pm3;
     private String mare;
 
     public Result2(){

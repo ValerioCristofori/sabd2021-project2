@@ -1,4 +1,4 @@
-package it.uniroma2.utils;
+package it.uniroma2.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -11,16 +11,22 @@ import java.util.Properties;
 
 public class KafkaHandler {
 
-    public static final String ADDRESS = "localhost:9092";
-
-    public static final String TOPIC_SOURCE = "source";
+    public static final String TOPIC_SOURCE = "flink-topic";
     public static final String TOPIC_QUERY1 = "query1";
     public static final String TOPIC_QUERY2 = "query2";
     public static final String TOPIC_QUERY3 = "query3";
 
+    // brokers
+    public static final String KAFKA_BROKER_1 = "localhost:9092";
+    public static final String KAFKA_BROKER_2 = "localhost:9093";
+    public static final String KAFKA_BROKER_3 = "localhost:9094";
+
+    // bootstrap servers
+    public static final String BOOTSTRAP_SERVERS = KAFKA_BROKER_1 + "," + KAFKA_BROKER_2 + "," + KAFKA_BROKER_3;
+
     public static Properties getProperties( String propCase ){
         Properties prop = new Properties();
-        prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ADDRESS); //broker
+        prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS); //broker
         if( propCase.equals("injector") ) {
             prop.put( ProducerConfig.CLIENT_ID_CONFIG, "producer-flink" ); // consumer group
             prop.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName()); //serializzazione key value

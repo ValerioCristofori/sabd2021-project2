@@ -4,11 +4,10 @@ import it.uniroma2.entity.Mappa;
 import it.uniroma2.query1.Query1;
 import it.uniroma2.query2.Query2;
 import it.uniroma2.query3.Query3;
-import it.uniroma2.utils.KafkaHandler;
+import it.uniroma2.kafka.KafkaHandler;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -23,18 +22,21 @@ import java.time.Duration;
 public class FlinkMain {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
-    private static StreamExecutionEnvironment env;
 
 
-    private static DataStream<Tuple2<Long,String>> setup(){
+    public static void main( String[] args ){
+
+        // faccio setup ambiente flink
+        Configuration conf = new Configuration();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // creo Flink consumer per kafka
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
-        // assegno i watermarks per la granularita' del minuto
+        // assegno i watermarks con la granularita' del minuto
         consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
 
-        return env.addSource(consumer).flatMap( new FlatMapFunction<String, Tuple2<Long, String>>() {
+        DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).flatMap( new FlatMapFunction<String, Tuple2<Long, String>>() {
             @Override
             public void flatMap(String s, Collector<Tuple2<Long, String>> out) throws ParseException {
 
@@ -46,25 +48,16 @@ public class FlinkMain {
             }
         }).name("source");
 
-    }
-
-    public static void main( String[] args ){
-
-        // faccio setup ambiente flink
-        Configuration conf = new Configuration();
-        env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
-
-        DataStream<Tuple2<Long,String>> dataStream = setup(); // tupla: timestamp, list record
         Mappa.setup(); //setup della mappa per il calcolo della dimensione delle celle
 
-        new Query1(dataStream, "week");
-        new Query1(dataStream, "month");
+        new Query1(dataStream, "weekly");
+        new Query1(dataStream, "monthly");
 
-        //new Query2(dataStream, "week");
-        //new Query2(dataStream, "month");
+        new Query2(dataStream, "weekly");
+        new Query2(dataStream, "monthly");
 
-        //new Query3(dataStream,"one-hour");
-        //new Query3(dataStream,"two-hour");
+        new Query3(dataStream,"oneHour");
+        new Query3(dataStream,"twoHour");
 
         try {
             env.execute();

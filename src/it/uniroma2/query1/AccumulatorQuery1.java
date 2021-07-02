@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class AccumulatorQuery1 implements Serializable {
 
-    private Map<String, List<String>> mapForResult; //K e' il tipo, V e' la lista di tutti trip
+    private final Map<String, List<String>> mapForResult; //K e' il tipo, V e' la lista di tutti trip
     // trip per evitare duplicati dati da stesse navi con diverse rotte ( trip e' la chiave del dataset )
 
     public AccumulatorQuery1(){

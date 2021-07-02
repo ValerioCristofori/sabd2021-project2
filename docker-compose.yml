@@ -1,8 +1,51 @@
 version: '3'
 
 services:
+    zookeeper:
+        image: zookeeper
+        container_name: zookeeper
+        restart: always
+        ports:
+            - "2181:2181"
+            - "2888:2888"
+            - "3888:3888"
+        tty: false
+        stdin_open: false
+
+    kafka_broker_1:
+        image: effeerre/kafka
+        container_name: kafka_broker_1
+        depends_on:
+            - zookeeper
+        links:
+            - zookeeper
+        ports:
+            - "9093:9092"
+        environment:
+            - BROKER_ID=1
+            - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+            - ALLOW_PLAINTEXT_LISTENER=yes
+        stdin_open: true
+        tty: true
+
+    kafka_broker_2:
+        image: effeerre/kafka
+        container_name: kafka_broker_2
+        depends_on:
+            - zookeeper
+        links:
+            - zookeeper
+        ports:
+            - "9094:9092"
+        environment:
+            - BROKER_ID=2
+            - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+            - ALLOW_PLAINTEXT_LISTENER=yes
+        stdin_open: true
+        tty: true
+
     kafka:
-        image: docker.io/bitnami/kafka:latest
+        image: effeerre/kafka
         container_name: kafka
         depends_on:
             - zookeeper
@@ -11,18 +54,9 @@ services:
         ports:
             - "9092:9092"
         environment:
+            - BROKER_ID=0
             - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
             - ALLOW_PLAINTEXT_LISTENER=yes
-
-
-    zookeeper:
-        image: zookeeper
-        container_name: zookeeper
-        restart: always
-        environment:
-            - ALLOW_ANONYMOUS_LOGIN=yes
-        ports:
-             - "2181:2181"
 
     jobmanager:
         image: flink:latest
@@ -31,11 +65,11 @@ services:
             - "8081:8081"
         command: jobmanager
         volumes:
-        -   ./dist:/data
+        -   ./target:/opt/flink/data/
         environment:
             - |
-                FLINK_PROPERTIES=
-                jobmanager.rpc.address: jobmanager
+              FLINK_PROPERTIES=
+              jobmanager.rpc.address: jobmanager
     taskmanager:
         image: flink:latest
         depends_on:
@@ -43,6 +77,6 @@ services:
         command: taskmanager
         environment:
             - |
-                FLINK_PROPERTIES=
-                jobmanager.rpc.address: jobmanager
-                taskmanager.numberOfTaskSlots: 2
+              FLINK_PROPERTIES=
+              jobmanager.rpc.address: jobmanager
+              taskmanager.numberOfTaskSlots: 2

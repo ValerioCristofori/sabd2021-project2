@@ -4,7 +4,7 @@ import it.uniroma2.entity.EntryData;
 import it.uniroma2.query3.ranking.RankingTrip;
 import it.uniroma2.query3.ranking.Trip;
 import it.uniroma2.utils.FlinkKafkaSerializer;
-import it.uniroma2.utils.KafkaHandler;
+import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.time.OneHourWindowAssigner;
 import it.uniroma2.utils.time.TwoHourWindowAssigner;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -22,10 +22,10 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Query3 {
-    private DataStream<Tuple2<Long, String>> dataStream;
-    private String timeIntervalType;
+    private final DataStream<Tuple2<Long, String>> dataStream;
+    private final String timeIntervalType;
     private Logger log;
-    private Properties prop;
+    private final Properties prop;
 
     public Query3(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
         this.dataStream = dataStream;
@@ -44,10 +44,10 @@ public class Query3 {
 
         // keyed and windowed stream
         WindowedStream<EntryData,String, TimeWindow> windowedStream = null;
-        if( timeIntervalType.equals("one-hour") ){
+        if( timeIntervalType.equals("oneHour") ){
             windowedStream = stream.keyBy( EntryData::getTripId )
                     .window( new OneHourWindowAssigner() );
-        }else if( timeIntervalType.equals("two-hour") ){
+        }else if( timeIntervalType.equals("twoHour") ){
             windowedStream = stream.keyBy( EntryData::getTripId )
                     .window( new TwoHourWindowAssigner() );
         }else{
@@ -59,9 +59,9 @@ public class Query3 {
                 .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3());
 
         AllWindowedStream<Trip, TimeWindow> windowedStreamGlobalRank = null;
-        if( timeIntervalType.equals("one-hour") ){
+        if( timeIntervalType.equals("oneHour") ){
             windowedStreamGlobalRank = windowedTrip.windowAll( new OneHourWindowAssigner() );
-        }else if( timeIntervalType.equals("two-hour") ){
+        }else if( timeIntervalType.equals("twoHour") ){
             windowedStreamGlobalRank = windowedTrip.windowAll( new TwoHourWindowAssigner() );
         }else{
             log.warning("Time interval not valid");

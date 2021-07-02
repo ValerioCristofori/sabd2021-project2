@@ -4,7 +4,7 @@ import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.FirstResult2;
 import it.uniroma2.entity.Result2;
 import it.uniroma2.utils.FlinkKafkaSerializer;
-import it.uniroma2.utils.KafkaHandler;
+import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.time.MonthWindowAssigner;
 import it.uniroma2.utils.time.WeekWindowAssigner;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -27,19 +27,19 @@ import java.util.logging.Logger;
 
 public class Query2 {
 
-    private DataStream<Tuple2<Long, String>> dataStream;
-    private String timeIntervalType;
+    private final DataStream<Tuple2<Long, String>> dataStream;
+    private final String timeIntervalType;
     private int numDaysInterval;
     private Logger log;
     private static final double canaleDiSiciliaLon = 12.0;
-    private Properties prop;
+    private final Properties prop;
 
     public Query2(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
         this.dataStream = dataStream;
         this.timeIntervalType = timeIntervalType;
-        if (timeIntervalType.equals("week")){
+        if (timeIntervalType.equals("weekly")){
             this.numDaysInterval = Calendar.DAY_OF_WEEK;
-        } else if (timeIntervalType.equals("month")){
+        } else if (timeIntervalType.equals("monthly")){
             this.numDaysInterval = Calendar.DAY_OF_MONTH;
         }
         this.prop = KafkaHandler.getProperties("producer");
@@ -56,13 +56,6 @@ public class Query2 {
                     Double.parseDouble(records[4]), Integer.parseInt(records[1]), entry.f0, records[10]);
         });
 
-//        DataStream<EntryData> filteredMarOccidentaleStream = stream
-//                .filter( (FilterFunction<EntryData>) entry -> entry.getLon() < canaleDiSiciliaLon)
-//                .name("filtered-occidentale-stream");
-//        DataStream<EntryData> filteredMarOrientaleStream = stream
-//                .filter((FilterFunction<EntryData>) entry -> entry.getLon() >= canaleDiSiciliaLon)
-//                .name("filtered-orientale-stream");
-
         KeyedStream<FirstResult2, Tuple2<String, Integer>> firstKeyedStream = stream.keyBy(EntryData::getCella)
                 .window(TumblingEventTimeWindows.of(Time.hours(12)))
                 // lista dei tripId per ogni cella e fascia oraria
@@ -77,9 +70,9 @@ public class Query2 {
 
         // per le due finestre temporali di una settimana e un mese
         WindowedStream<FirstResult2, Tuple2<String, Integer>, TimeWindow> firstWindowedStream = null;
-        if( timeIntervalType.equals("week") ){
+        if( timeIntervalType.equals("weekly") ){
             firstWindowedStream = firstKeyedStream.window( new WeekWindowAssigner() );
-        }else if( timeIntervalType.equals("month") ){
+        }else if( timeIntervalType.equals("monthly") ){
             firstWindowedStream = firstKeyedStream.window( new MonthWindowAssigner() );
         }else{
             log.warning("Time interval not valid");
@@ -102,9 +95,9 @@ public class Query2 {
         .keyBy(FirstResult2::getMare);
 
         WindowedStream<FirstResult2, String, TimeWindow> windowedStream = null;
-        if( timeIntervalType.equals("week") ){
+        if( timeIntervalType.equals("weekly") ){
             windowedStream = keyedStream.window( new WeekWindowAssigner() );
-        }else if( timeIntervalType.equals("month") ){
+        }else if( timeIntervalType.equals("monthly") ){
             windowedStream = keyedStream.window( new MonthWindowAssigner() );
         }else{
             log.warning("Time interval not valid");
