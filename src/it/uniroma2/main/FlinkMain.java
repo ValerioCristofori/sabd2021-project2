@@ -21,20 +21,20 @@ import java.time.Duration;
 
 public class FlinkMain {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
+    private static final SimpleDateFormat[] dateFormats = {new SimpleDateFormat("dd/MM/yy HH:mm"),
+            new SimpleDateFormat("dd-MM-yy HH:mm")} ;
 
 
     public static void main( String[] args ){
 
         // faccio setup ambiente flink
-        Configuration conf = new Configuration();
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // creo Flink consumer per kafka
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
         // assegno i watermarks con la granularita' del minuto
-        consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
+        consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(100)) );
 
         DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).flatMap( new FlatMapFunction<String, Tuple2<Long, String>>() {
             @Override
@@ -42,7 +42,17 @@ public class FlinkMain {
 
                 System.out.println(s);
                 String[] records = s.split(",");
-                Long timestamp = sdf.parse(records[7]).getTime();
+                Long timestamp = null;
+                for (SimpleDateFormat dateFormat : dateFormats) {
+                    try {
+                        timestamp = dateFormat.parse(records[7]).getTime();
+                        //System.out.println("timestamp: "+new Date(timestamp));
+                        break;
+                    } catch (ParseException ignored) {
+                    }
+                }
+                if (timestamp == null)
+                    throw new NullPointerException();
                 out.collect(new Tuple2<>(timestamp,s));
 
             }
@@ -53,11 +63,11 @@ public class FlinkMain {
         new Query1(dataStream, "weekly");
         new Query1(dataStream, "monthly");
 
-        new Query2(dataStream, "weekly");
-        new Query2(dataStream, "monthly");
+        //new Query2(dataStream, "weekly");
+        //new Query2(dataStream, "monthly");
 
-        new Query3(dataStream,"oneHour");
-        new Query3(dataStream,"twoHour");
+        //new Query3(dataStream,"oneHour");
+        //new Query3(dataStream,"twoHour");
 
         try {
             env.execute();

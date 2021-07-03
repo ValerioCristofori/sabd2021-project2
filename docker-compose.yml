@@ -23,8 +23,6 @@ services:
             - "9093:9092"
         environment:
             - BROKER_ID=1
-            - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-            - ALLOW_PLAINTEXT_LISTENER=yes
         stdin_open: true
         tty: true
 
@@ -39,8 +37,6 @@ services:
             - "9094:9092"
         environment:
             - BROKER_ID=2
-            - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-            - ALLOW_PLAINTEXT_LISTENER=yes
         stdin_open: true
         tty: true
 
@@ -55,28 +51,3 @@ services:
             - "9092:9092"
         environment:
             - BROKER_ID=0
-            - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-            - ALLOW_PLAINTEXT_LISTENER=yes
-
-    jobmanager:
-        image: flink:latest
-        container_name: jobmanager
-        ports:
-            - "8081:8081"
-        command: jobmanager
-        volumes:
-        -   ./target:/opt/flink/data/
-        environment:
-            - |
-              FLINK_PROPERTIES=
-              jobmanager.rpc.address: jobmanager
-    taskmanager:
-        image: flink:latest
-        depends_on:
-            - jobmanager
-        command: taskmanager
-        environment:
-            - |
-              FLINK_PROPERTIES=
-              jobmanager.rpc.address: jobmanager
-              taskmanager.numberOfTaskSlots: 2

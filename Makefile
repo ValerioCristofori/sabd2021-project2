@@ -1,6 +1,6 @@
 build:
-	mvn clean package assembly:single
+	mvn clean package
 up:
-	./docker/start-docker.sh
+	./docker/start-proj.sh
 down:
-	./docker/stop-docker.sh
+	./docker/stop-proj.sh

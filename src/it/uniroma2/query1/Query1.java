@@ -90,7 +90,7 @@ public class Query1 {
                 } ).name( "query1-"+this.timeIntervalType)
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType),
-                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE));
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("sink-"+KafkaHandler.TOPIC_QUERY1+this.timeIntervalType);
 
 
 
