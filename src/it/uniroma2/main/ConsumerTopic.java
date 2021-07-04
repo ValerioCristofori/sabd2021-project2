@@ -1,85 +1,64 @@
 package it.uniroma2.main;
 
 import it.uniroma2.kafka.KafkaHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.kafka.clients.consumer.*;
 
-
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class ConsumerTopic{
 
     private static Logger log;
-    private static String topicQuery;
-    private static Properties prop;
+    private static final String RESULTS = "Results";
 
     public static void main( String[] args ){
 
-        Logger log = Logger.getLogger(ConsumerTopic.class.getSimpleName());
+        //cleaning result directory to store data results
+        cleanResultsFolder();
+        System.out.println("Result directory prepared");
 
-        log.info("Parsing arguments");
+        // create a consumer structure to allow stopping
+        ArrayList<KafkaConsumerThread> consumers = new ArrayList<>();
 
-        if( args.length < 1 ){
-            log.info("No arguments");
-            System.exit(1);
-        }else{
-            log.info("argument " + args[0]);
-            topicQuery = args[0];
+        int id = 0;
+        // launch Flink topics consumers
+        for (int i = 0; i < KafkaHandler.FLINK_TOPICS.length; i++) {
+            KafkaConsumerThread consumer = new KafkaConsumerThread(id,
+                    KafkaHandler.FLINK_TOPICS[i],
+                    KafkaHandler.FLINK_OUTPUT_FILES[i]);
+            consumers.add(consumer);
+            new Thread(consumer).start();
+            id++;
         }
 
-
-        // scelgo il topic da args
-        if( topicQuery.equals("1") ){
-            log.info("Topic query 1");
-            topicQuery = KafkaHandler.TOPIC_QUERY1;
+        System.out.println("Enter something to stop consumers");
+        Scanner scanner = new Scanner(System.in);
+        // wait for the user to digit something
+        scanner.next();
+        System.out.println("Sending shutdown signal to consumers");
+        // stop consumers
+        for (KafkaConsumerThread consumer : consumers) {
+            consumer.stop();
         }
-        else if( topicQuery.equals("2") ){
-            log.info("Topic query 2");
-            topicQuery = KafkaHandler.TOPIC_QUERY2;
+        System.out.flush();
+        System.out.println("Signal sent, closing...");
+
+    }
+
+    public static void cleanResultsFolder() {
+        try {
+            FileUtils.cleanDirectory(new File(RESULTS));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Could not clean Results directory");
         }
-        else if( topicQuery.equals("3") ){
-            log.info("Topic query 3");
-            topicQuery = KafkaHandler.TOPIC_QUERY3;
-        }
-
-
-        // creo il consumer usando le prop
-        prop = KafkaHandler.getProperties("csv_output");
-        final Consumer<Long, String> consumerWeek = new KafkaConsumer<>(prop);
-        //final Consumer<Long, String> consumerMonth = new KafkaConsumer<>(prop);
-
-        // sottoscrivo il consumer al topic
-        consumerWeek.subscribe(Collections.singletonList(topicQuery + "weekly"));
-        log.info("Consumer subscribed to " + topicQuery + "weekly");
-        //consumerMonth.subscribe(Collections.singletonList(topicQuery + "monthly"));
-        //log.info("Consumer subscribed to " + topicQuery + "monthly" );
-        // creo il csv writer per il risultato su Results
-        CsvWriter writerWeek = new CsvWriter( topicQuery + "weekly" );
-        //CsvWriter writerMonth = new CsvWriter( topicQuery + "monthly" );
-
-        while (true) {
-            final ConsumerRecords<Long, String> consumerRecordsWeek = consumerWeek.poll(Duration.ofMillis(1000));
-            //final ConsumerRecords<Long, String> consumerRecordsMonth = consumerMonth.poll(Duration.ofMillis(1000));
-            final int giveUp[] = {1000,1000};   int[] noRecordsCount = {0,0};
-            if ( consumerRecordsWeek.count()==0 ) {  //bugged****************************************
-                System.out.println("There are no records in week topic");
-                noRecordsCount[0]++;
-                if (noRecordsCount[0] > giveUp[0]) break;
-                else continue;
-            }
-            System.out.println("aaa");
-
-            consumerRecordsWeek.forEach(key -> {
-                System.out.println(key.toString());
-                writerWeek.appendRow(key.toString());
-            });
-
-
-            consumerWeek.commitAsync();
-        }
-
     }
 
 

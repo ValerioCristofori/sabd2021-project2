@@ -12,9 +12,12 @@ import java.util.Properties;
 public class KafkaHandler {
 
     public static final String TOPIC_SOURCE = "flink-topic";
-    public static final String TOPIC_QUERY1 = "query1";
-    public static final String TOPIC_QUERY2 = "query2";
-    public static final String TOPIC_QUERY3 = "query3";
+    public static final String TOPIC_QUERY1_WEEKLY = "query1weekly";
+    public static final String TOPIC_QUERY1_MONTHLY = "query1monthly";
+    public static final String TOPIC_QUERY2_WEEKLY = "query2weekly";
+    public static final String TOPIC_QUERY2_MONTHLY = "query2monthly";
+    public static final String TOPIC_QUERY3_ONEHOUR= "query3oneHour";
+    public static final String TOPIC_QUERY3_TWOHOUR = "query3twoHour";
 
     // brokers
     public static final String KAFKA_BROKER_1 = "localhost:9092";
@@ -23,6 +26,24 @@ public class KafkaHandler {
 
     // bootstrap servers
     public static final String BOOTSTRAP_SERVERS = KAFKA_BROKER_1 + "," + KAFKA_BROKER_2 + "," + KAFKA_BROKER_3;
+
+    public static final String[] FLINK_TOPICS = {TOPIC_QUERY1_WEEKLY, TOPIC_QUERY1_MONTHLY,
+            TOPIC_QUERY2_WEEKLY, TOPIC_QUERY2_MONTHLY, TOPIC_QUERY3_ONEHOUR,
+            TOPIC_QUERY3_TWOHOUR};
+
+    // Results
+
+
+    public static final String QUERY1_WEEKLY_CSV = "Results/query1weekly.csv";
+    public static final String QUERY1_MONTHLY_CSV = "Results/query1monthly.csv";
+    public static final String QUERY2_WEEKLY_CSV = "Results/query2weekly.csv";
+    public static final String QUERY2_MONTHLY_CSV = "Results/query2monthly.csv";
+    public static final String QUERY3_ONEHOUR_CSV = "Results/query3oneHour.csv";
+    public static final String QUERY3_TWOHOUR_CSV = "Results/query3twoHour.csv";
+
+    public static final String[] FLINK_OUTPUT_FILES = {QUERY1_WEEKLY_CSV, QUERY1_MONTHLY_CSV,
+            QUERY2_WEEKLY_CSV, QUERY2_MONTHLY_CSV, QUERY3_ONEHOUR_CSV,
+            QUERY3_TWOHOUR_CSV};
 
     public static Properties getProperties( String propCase ){
         Properties prop = new Properties();

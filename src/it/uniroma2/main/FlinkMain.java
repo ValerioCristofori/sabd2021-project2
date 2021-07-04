@@ -7,6 +7,7 @@ import it.uniroma2.query3.Query3;
 import it.uniroma2.kafka.KafkaHandler;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -34,11 +35,11 @@ public class FlinkMain {
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
         // assegno i watermarks con la granularita' del minuto
-        consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(100)) );
+        consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
 
-        DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).flatMap( new FlatMapFunction<String, Tuple2<Long, String>>() {
+        DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).map( new MapFunction<String, Tuple2<Long, String>>() {
             @Override
-            public void flatMap(String s, Collector<Tuple2<Long, String>> out) throws ParseException {
+            public Tuple2<Long, String> map(String s) throws Exception {
 
                 System.out.println(s);
                 String[] records = s.split(",");
@@ -53,7 +54,7 @@ public class FlinkMain {
                 }
                 if (timestamp == null)
                     throw new NullPointerException();
-                out.collect(new Tuple2<>(timestamp,s));
+                return new Tuple2<>(timestamp,s);
 
             }
         }).name("source");
@@ -70,7 +71,7 @@ public class FlinkMain {
         //new Query3(dataStream,"twoHour");
 
         try {
-            env.execute();
+            env.execute("sabd2021-project2");
         } catch (Exception e) {
             e.printStackTrace();
         }

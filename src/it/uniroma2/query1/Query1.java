@@ -25,6 +25,7 @@ public class Query1 {
 
     private final DataStream<Tuple2<Long, String>> dataStream;
     private final String timeIntervalType;
+    private String topic;
     private int numDaysInteval;
     private Logger log;
     private final Properties prop;
@@ -34,8 +35,11 @@ public class Query1 {
         this.timeIntervalType = timeIntervalType;
         if( timeIntervalType.equals("weekly") ){
             this.numDaysInteval = Calendar.DAY_OF_WEEK;
+            this.topic = KafkaHandler.TOPIC_QUERY1_WEEKLY;
         }else if( timeIntervalType.equals("monthly") ){
             this.numDaysInteval = Calendar.DAY_OF_MONTH;
+            this.topic = KafkaHandler.TOPIC_QUERY1_MONTHLY;
+
         }
         this.prop = KafkaHandler.getProperties("producer");
         this.run();
@@ -88,9 +92,9 @@ public class Query1 {
                     System.out.println(entryResultBld);
                     return entryResultBld.toString();
                 } ).name( "query1-"+this.timeIntervalType)
-                .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType,
-                        new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY1 + this.timeIntervalType),
-                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("sink-"+KafkaHandler.TOPIC_QUERY1+this.timeIntervalType);
+                .addSink(new FlinkKafkaProducer<>(this.topic,
+                        new FlinkKafkaSerializer(this.topic),
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+ this.topic);
 
 
 

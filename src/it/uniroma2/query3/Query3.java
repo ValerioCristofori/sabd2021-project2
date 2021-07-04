@@ -24,12 +24,18 @@ import java.util.logging.Logger;
 public class Query3 {
     private final DataStream<Tuple2<Long, String>> dataStream;
     private final String timeIntervalType;
+    private String topic;
     private Logger log;
     private final Properties prop;
 
     public Query3(DataStream<Tuple2<Long, String>> dataStream, String timeIntervalType) {
         this.dataStream = dataStream;
         this.timeIntervalType = timeIntervalType;
+        if( timeIntervalType.equals("oneHour") ){
+            this.topic = KafkaHandler.TOPIC_QUERY3_ONEHOUR;
+        }else if( timeIntervalType.equals("twoHour") ){
+            this.topic = KafkaHandler.TOPIC_QUERY3_TWOHOUR;
+        }
         this.prop = KafkaHandler.getProperties("producer");
         this.run();
     }
@@ -80,8 +86,8 @@ public class Query3 {
                 }
                 return entryResultBld.toString();
         }).name( "query3-"+this.timeIntervalType)
-                .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3 + this.timeIntervalType,
-                        new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3 + this.timeIntervalType),
-                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE));
+                .addSink(new FlinkKafkaProducer<>(this.topic,
+                        new FlinkKafkaSerializer(this.topic),
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+this.topic);
     }
 }

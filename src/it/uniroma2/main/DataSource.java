@@ -13,7 +13,7 @@ public class DataSource {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
     private static final String path = "data/prj2_dataset_imported.csv";
-    private static final Long SLEEP = 10L;
+    private static final Long SLEEP = 1000L;
 
     public static void main(String[] args) {
 
