@@ -18,7 +18,7 @@ public class FirstAccumulatorQuery3 implements Serializable {
 
     public void add( double newLon, double newLat ){
         if( lastLon != Double.MAX_VALUE && lastLat != Double.MAX_VALUE ){
-            // non e' il primo punto nessuna distanza
+            // non e' il primo punto
             distanzaTotale = distanzaTotale + Mappa.distance(lastLat,lastLon,newLat,newLon,'K');
         }
         lastLon = newLon;

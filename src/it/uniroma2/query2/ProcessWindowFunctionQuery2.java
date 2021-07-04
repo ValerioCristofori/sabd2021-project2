@@ -16,6 +16,7 @@ public class ProcessWindowFunctionQuery2 extends ProcessWindowFunction<Result2, 
         Result2 query2Result = iterable.iterator().next();
         query2Result.setTimestamp(new Date(context.window().getStart()));
         query2Result.setMare(mare);
+
         collector.collect(query2Result);
     }
 

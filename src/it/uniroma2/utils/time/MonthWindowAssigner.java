@@ -27,6 +27,8 @@ public class MonthWindowAssigner extends TumblingEventTimeWindows {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         long startDate = calendar.getTimeInMillis();
         calendar.add(Calendar.MONTH,1);
-        return Collections.singletonList(new TimeWindow(startDate, calendar.getTimeInMillis()));
+        calendar.set(Calendar.DAY_OF_MONTH, -1);
+        long endDate = calendar.getTimeInMillis();
+        return Collections.singletonList(new TimeWindow(startDate, endDate));
     }
 }

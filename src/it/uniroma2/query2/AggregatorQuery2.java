@@ -19,8 +19,8 @@ public class AggregatorQuery2 implements AggregateFunction<FirstResult2, Result2
 
     @Override
     public Result2 merge(Result2 accumulator1, Result2 accumulator2) {
-        accumulator2.getAm3().forEach(accumulator1::amAdd);
-        accumulator2.getPm3().forEach(accumulator1::pmAdd);
+        accumulator2.getMattinaTop3().forEach(accumulator1::addMattina);
+        accumulator2.getPomeriggioTop3().forEach(accumulator1::addPomeriggio);
         return accumulator1;
     }
 

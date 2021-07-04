@@ -25,7 +25,6 @@ public class AggregatorQuery3 implements AggregateFunction<Trip, RankingTrip, Ra
 
     @Override
     public RankingTrip merge(RankingTrip acc1, RankingTrip acc2) {
-        acc2.getRanking().forEach(acc1::addTrip);
-        return acc1;
+        return null;
     }
 }

@@ -7,26 +7,27 @@ import java.util.List;
 
 public class Result2 {
 
+    private static final int k = 3; //top
     private Date timestamp;
-    private final List<FirstResult2> am3;
-    private final List<FirstResult2> pm3;
+    private final List<FirstResult2> mattinaTop3; //ranking top 3 mattina
+    private final List<FirstResult2> pomeriggioTop3; //ranking top 3 pomeriggio
     private String mare;
 
     public Result2(){
-        am3 = new ArrayList<>();
-        pm3 = new ArrayList<>();
-        for (int i = 0; i < 3; i ++){
+        mattinaTop3 = new ArrayList<>();
+        pomeriggioTop3 = new ArrayList<>();
+        for (int i = 0; i < k; i ++){
             FirstResult2 query2FirstResult = new FirstResult2(-1);
-            this.forceAdd(query2FirstResult);
+            this.fakeAdd(query2FirstResult);
         }
     }
 
-    public List<FirstResult2> getAm3(){
-        return am3;
+    public List<FirstResult2> getMattinaTop3(){
+        return mattinaTop3;
     }
 
-    public List<FirstResult2> getPm3(){
-        return pm3;
+    public List<FirstResult2> getPomeriggioTop3(){
+        return pomeriggioTop3;
     }
 
     public Date getTimestamp(){
@@ -45,57 +46,65 @@ public class Result2 {
         this.mare = mare;
     }
 
-    public void forceAdd(FirstResult2 query2FirstResult){
-        am3.add(query2FirstResult);
-        pm3.add(query2FirstResult);
+    public void fakeAdd(FirstResult2 query2FirstResult){
+        mattinaTop3.add(query2FirstResult);
+        pomeriggioTop3.add(query2FirstResult);
     }
 
-    public void amAdd(FirstResult2 firstResult){
-        int amFrequentazione = firstResult.getFrequentazione();
-        if(amFrequentazione > am3.get(1).getFrequentazione()) {
-            if(amFrequentazione > am3.get(2).getFrequentazione()){
-                am3.add(3,firstResult);
-                am3.remove(0);
-            } else {
-                am3.add(2, firstResult);
-                am3.remove(0);
-            }
-        } else {
-            if(amFrequentazione > am3.get(0).getFrequentazione()){
-                am3.add(1,firstResult);
-                am3.remove(0);
-            }
-        }
-    }
-
-    public void pmAdd(FirstResult2 firstResult){
-        int pmFrequentazione = firstResult.getFrequentazione();
-        if(pmFrequentazione > pm3.get(1).getFrequentazione()) {
-            if(pmFrequentazione > pm3.get(2).getFrequentazione()){
-                pm3.add(3,firstResult);
-                pm3.remove(0);
-            } else {
-                pm3.add(2, firstResult);
-                pm3.remove(0);
-            }
-        } else {
-            if(pmFrequentazione > pm3.get(0).getFrequentazione()){
-                pm3.add(1,firstResult);
-                pm3.remove(0);
-            }
-        }
-    }
 
     public void add(FirstResult2 firstResult){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(firstResult.getTimestamp());
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         if(hourOfDay < 12){
-            amAdd(firstResult);
+            addMattina(firstResult);
         } else {
-            pmAdd(firstResult);
+            addPomeriggio(firstResult);
         }
 
     }
+
+    public void addMattina(FirstResult2 firstResult){
+        int mattinaFrequentazione = firstResult.getFrequentazione();
+        if(mattinaFrequentazione >= mattinaTop3.get(0).getFrequentazione()) {
+
+            if(mattinaFrequentazione >= mattinaTop3.get(1).getFrequentazione()){
+
+                if( mattinaFrequentazione >= mattinaTop3.get(2).getFrequentazione() ){
+                    mattinaTop3.add(3,firstResult);
+                    mattinaTop3.remove(0);
+                }else{
+                    mattinaTop3.add(2, firstResult);
+                    mattinaTop3.remove(0);
+                }
+
+            } else {
+                mattinaTop3.add(1, firstResult);
+                mattinaTop3.remove(0);
+            }
+        }
+    }
+
+    public void addPomeriggio(FirstResult2 firstResult){
+        int pomeriggioFrequentazione = firstResult.getFrequentazione();
+        if(pomeriggioFrequentazione >= pomeriggioTop3.get(0).getFrequentazione()) {
+
+            if(pomeriggioFrequentazione >= pomeriggioTop3.get(1).getFrequentazione()){
+
+                if( pomeriggioFrequentazione >= pomeriggioTop3.get(2).getFrequentazione() ){
+                    pomeriggioTop3.add(3,firstResult);
+                    pomeriggioTop3.remove(0);
+                }else{
+                    pomeriggioTop3.add(2, firstResult);
+                    pomeriggioTop3.remove(0);
+                }
+
+            } else {
+                pomeriggioTop3.add(1, firstResult);
+                pomeriggioTop3.remove(0);
+            }
+        }
+    }
+
 
 }

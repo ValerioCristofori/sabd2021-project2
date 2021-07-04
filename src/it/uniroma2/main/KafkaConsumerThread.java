@@ -6,14 +6,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-import javax.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Properties;
 
 public class KafkaConsumerThread implements Runnable{
@@ -67,6 +65,7 @@ public class KafkaConsumerThread implements Runnable{
                     BufferedWriter bw = new BufferedWriter(writer);
 
                     for (ConsumerRecord<Long, String> record : records) {
+                        System.out.println("{TOPIC:"+this.topic+"} " + record.value());
                         bw.append(record.value());
                         bw.append("\n");
                     }
@@ -75,7 +74,6 @@ public class KafkaConsumerThread implements Runnable{
                     bw.close();
                     writer.close();
                 }
-                consumer.commitAsync();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -85,7 +83,7 @@ public class KafkaConsumerThread implements Runnable{
          {
         e.printStackTrace();
         System.err.println("Could not export result to " + path);
-        }finally {
+        } finally {
             // close consumer
             consumer.close();
             System.out.println("Flink Consumer stopped");

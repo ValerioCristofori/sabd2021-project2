@@ -17,9 +17,9 @@ public class FirstResult2 {
     public void setMareByCella(String cella){
         // prendo valore della longitudine nell'id della cella
         if (Mappa.getLonByCella(cella) < Mappa.getCanaleDiSiciliaLon()){
-            mare = "Occidentale";
+            this.mare = "Occidentale";
         } else {
-            mare = "Orientale";
+            this.mare = "Orientale";
         }
     }
 

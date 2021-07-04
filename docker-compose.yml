@@ -12,9 +12,9 @@ services:
         tty: false
         stdin_open: false
 
-    kafka_broker_1:
+    kafka_broker_2:
         image: effeerre/kafka
-        container_name: kafka_broker_1
+        container_name: kafka_broker_2
         depends_on:
             - zookeeper
         links:
@@ -26,9 +26,9 @@ services:
         stdin_open: true
         tty: true
 
-    kafka_broker_2:
+    kafka_broker_3:
         image: effeerre/kafka
-        container_name: kafka_broker_2
+        container_name: kafka_broker_3
         depends_on:
             - zookeeper
         links:
@@ -40,9 +40,9 @@ services:
         stdin_open: true
         tty: true
 
-    kafka:
+    kafka_broker_1:
         image: effeerre/kafka
-        container_name: kafka
+        container_name: kafka_broker_1
         depends_on:
             - zookeeper
         links:
@@ -51,3 +51,5 @@ services:
             - "9092:9092"
         environment:
             - BROKER_ID=0
+        stdin_open: true
+        tty: true

@@ -10,7 +10,7 @@ import java.util.Date;
 public class ProcessWindowFunctionQuery1 extends ProcessWindowFunction<Result1, Result1, String, TimeWindow> {
 
     @Override
-    public void process(String cella, Context context, Iterable<Result1> iterable, Collector<Result1> collector) throws Exception {
+    public void process(String cella, Context context, Iterable<Result1> iterable, Collector<Result1> collector){
         Result1 query1Result = iterable.iterator().next();
         query1Result.setTimestamp(new Date(context.window().getStart())); // prendo il timestamp di inizio della finestra per il risultato
         query1Result.setCella(cella);

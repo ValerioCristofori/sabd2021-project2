@@ -25,56 +25,29 @@ public class EntryData implements Serializable {
         this.cella = Mappa.findRightCell(lon,lat);
     }
 
-    public EntryData(String record, String record1, double lat, double parseDouble, int timestamp, Long f0, String record2) {
-    }
-
 
     public String getTripId() {
         return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
     }
 
     public String getShipId() {
         return shipId;
     }
 
-    public void setShipId(String shipId) {
-        this.shipId = shipId;
-    }
-
     public String getShipType() {
         return shipType;
-    }
-
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
     }
 
     public double getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public double getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
     public String getCella() {
         return cella;
-    }
-
-    public void setCella(String cella) {
-        this.cella = cella;
     }
 
     public long getTimestamp() {

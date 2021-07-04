@@ -59,16 +59,11 @@ public class FlinkMain {
             }
         }).name("source");
 
-        Mappa.setup(); //setup della mappa per il calcolo della dimensione delle celle
+        new Query1(dataStream);
 
-        new Query1(dataStream, "weekly");
-        new Query1(dataStream, "monthly");
+        new Query2(dataStream);
 
-        //new Query2(dataStream, "weekly");
-        //new Query2(dataStream, "monthly");
-
-        //new Query3(dataStream,"oneHour");
-        //new Query3(dataStream,"twoHour");
+        new Query3(dataStream);
 
         try {
             env.execute("sabd2021-project2");
