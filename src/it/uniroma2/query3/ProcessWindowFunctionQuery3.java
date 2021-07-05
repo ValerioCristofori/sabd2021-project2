@@ -9,13 +9,12 @@ import org.apache.flink.util.Collector;
 
 import java.util.Date;
 
-public class ProcessWindowFunctionQuery3 extends ProcessAllWindowFunction<RankingTrip, RankingTrip, TimeWindow> {
+public class ProcessWindowFunctionQuery3 extends ProcessAllWindowFunction<String, String, TimeWindow> {
 
 
     @Override
-    public void process(Context context, Iterable<RankingTrip> iterable, Collector<RankingTrip> collector) throws Exception {
-        RankingTrip query3Result = iterable.iterator().next();
-        query3Result.setTimestamp(new Date(context.window().getStart()));
-        collector.collect(query3Result);
+    public void process(Context context, Iterable<String> iterable, Collector<String> collector) throws Exception {
+        String result = iterable.iterator().next();
+        collector.collect(new Date(context.window().getStart()) + result);
     }
 }

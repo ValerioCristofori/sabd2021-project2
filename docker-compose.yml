@@ -53,3 +53,12 @@ services:
             - BROKER_ID=0
         stdin_open: true
         tty: true
+
+    redis:
+        image: docker.io/bitnami/redis:6.2
+        container_name: redis
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        ports:
+            - '6379:6379'

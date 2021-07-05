@@ -6,9 +6,11 @@ import java.io.Serializable;
 
 public class FirstAccumulatorQuery3 implements Serializable {
 
-    double distanzaTotale;
-    double lastLon;
-    double lastLat;
+
+    private long ultimoTimestamp;
+    private double distanzaTotale;
+    private double lastLon;
+    private double lastLat;
 
     public FirstAccumulatorQuery3(){
         this.distanzaTotale = 0;
@@ -16,13 +18,14 @@ public class FirstAccumulatorQuery3 implements Serializable {
         this.lastLat = Double.MAX_VALUE;
     }
 
-    public void add( double newLon, double newLat ){
+    public void add( double newLon, double newLat, long timestamp ){
         if( lastLon != Double.MAX_VALUE && lastLat != Double.MAX_VALUE ){
             // non e' il primo punto
             distanzaTotale = distanzaTotale + Mappa.distance(lastLat,lastLon,newLat,newLon,'K');
         }
         lastLon = newLon;
         lastLat = newLat;
+        this.ultimoTimestamp = timestamp;
     }
 
 
@@ -30,7 +33,7 @@ public class FirstAccumulatorQuery3 implements Serializable {
         return distanzaTotale;
     }
 
-    public void setDistanzaTotale(double distanzaTotale) {
-        this.distanzaTotale = distanzaTotale;
+    public long getUltimoTimestamp() {
+        return ultimoTimestamp;
     }
 }

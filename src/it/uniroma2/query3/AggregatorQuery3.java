@@ -1,26 +1,26 @@
 package it.uniroma2.query3;
 
-import it.uniroma2.entity.FirstResult2;
-import it.uniroma2.entity.Result2;
 import it.uniroma2.query3.ranking.RankingTrip;
 import it.uniroma2.query3.ranking.Trip;
 import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 
-public class AggregatorQuery3 implements AggregateFunction<Trip, RankingTrip, RankingTrip> {
+public class AggregatorQuery3 implements AggregateFunction<Tuple3<String,Long,Double>, RankingTrip, String> {
     @Override
     public RankingTrip createAccumulator() {
         return new RankingTrip();
     }
 
     @Override
-    public RankingTrip add(Trip trip, RankingTrip accumulator) {
-        accumulator.add(trip);
+    public RankingTrip add(Tuple3<String,Long,Double> tuple3, RankingTrip accumulator) {
+        accumulator.addTrip(new Trip(tuple3.f0,tuple3.f2) );
         return accumulator;
     }
 
     @Override
-    public RankingTrip getResult(RankingTrip accumulator) {
-        return accumulator;
+    public String getResult(RankingTrip accumulator) {
+        return accumulator.getResult();
     }
 
     @Override

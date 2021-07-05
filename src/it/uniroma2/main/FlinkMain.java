@@ -14,6 +14,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.redis.common.config.FlinkJedisPoolConfig;
 import org.apache.flink.util.Collector;
 
 import java.text.ParseException;
@@ -22,6 +23,7 @@ import java.time.Duration;
 
 public class FlinkMain {
 
+    private static FlinkJedisPoolConfig conf;
     private static final SimpleDateFormat[] dateFormats = {new SimpleDateFormat("dd/MM/yy HH:mm"),
             new SimpleDateFormat("dd-MM-yy HH:mm")} ;
 
@@ -37,6 +39,9 @@ public class FlinkMain {
         // assegno i watermarks con la granularita' del minuto
         consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
 
+        // Redis sink
+         conf = new FlinkJedisPoolConfig.Builder().setHost("redis").setPort(6379).build();
+
         DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).map( new MapFunction<String, Tuple2<Long, String>>() {
             @Override
             public Tuple2<Long, String> map(String s) throws Exception {
@@ -47,7 +52,6 @@ public class FlinkMain {
                 for (SimpleDateFormat dateFormat : dateFormats) {
                     try {
                         timestamp = dateFormat.parse(records[7]).getTime();
-                        //System.out.println("timestamp: "+new Date(timestamp));
                         break;
                     } catch (ParseException ignored) {
                     }
@@ -82,5 +86,9 @@ public class FlinkMain {
         * */
 
 
+    }
+
+    public static FlinkJedisPoolConfig getConf() {
+        return conf;
     }
 }

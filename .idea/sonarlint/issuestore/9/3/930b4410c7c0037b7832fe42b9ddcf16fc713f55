@@ -1,0 +1,14 @@
+
+A
+java:S1128"+Remove this unused import 'java.util.Date'.(¸…¼ü
+M
+java:S1128"7Remove this unused import 'java.text.SimpleDateFormat'.(ú¡ÙÛ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(»ƒë˜şÿÿÿÿ
+A
+java:S1948"$Make "ranking" private or transient.(©ÿˆˆ8Æáã¯§/
+`
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(»ƒë˜şÿÿÿÿ
+m
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(íÿŠşÿÿÿÿ
+@
+java:S1068"%Remove this unused "k" private field.(»ƒë˜şÿÿÿÿ
