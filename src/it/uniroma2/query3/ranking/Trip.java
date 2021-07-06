@@ -19,10 +19,6 @@ public class Trip implements Serializable {
         return tripId;
     }
 
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
-
     public double getDistanza() {
         return distanza;
     }

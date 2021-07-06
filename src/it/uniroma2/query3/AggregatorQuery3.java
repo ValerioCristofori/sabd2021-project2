@@ -13,14 +13,14 @@ public class AggregatorQuery3 implements AggregateFunction<Tuple3<String,Long,Do
     }
 
     @Override
-    public RankingTrip add(Tuple3<String,Long,Double> tuple3, RankingTrip accumulator) {
-        accumulator.addTrip(new Trip(tuple3.f0,tuple3.f2) );
-        return accumulator;
+    public RankingTrip add(Tuple3<String,Long,Double> tuple3, RankingTrip ranking) {
+        ranking.addTrip(new Trip(tuple3.f0,tuple3.f2) );
+        return ranking;
     }
 
     @Override
-    public String getResult(RankingTrip accumulator) {
-        return accumulator.getResult();
+    public String getResult(RankingTrip ranking) {
+        return ranking.getResult();
     }
 
     @Override

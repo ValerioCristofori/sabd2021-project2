@@ -3,10 +3,8 @@ package it.uniroma2.query1;
 import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Mappa;
 import it.uniroma2.entity.Result1;
-import it.uniroma2.main.FlinkMain;
-import it.uniroma2.redis.RedisMapperCustom;
-import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.kafka.KafkaHandler;
+import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.utils.time.MonthWindowAssigner;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -15,7 +13,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-import org.apache.flink.streaming.connectors.redis.RedisSink;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,41 +22,33 @@ import java.util.logging.Logger;
 
 public class Query1 {
 
-    private final DataStream<Tuple2<Long, String>> dataStream;
     private Logger log;
-    private final Properties prop;
 
-    public Query1(DataStream<Tuple2<Long, String>> dataStream) {
-        this.dataStream = dataStream;
-        this.prop = KafkaHandler.getProperties("producer");
-        this.run();
-    }
+    public static void topology(DataStream<EntryData> dataStream) {
 
-    private void run() {
+        Properties prop = KafkaHandler.getProperties("producer");
 
-        DataStream<EntryData> stream = dataStream.map( (MapFunction<Tuple2<Long, String>, EntryData>) entry -> {
-            String[] records = entry.f1.split(",");
-            return new EntryData(records[0],Double.parseDouble(records[3]),
-                    Double.parseDouble(records[4]), Integer.parseInt(records[1]), entry.f0, records[10]);
-        });
-
-        DataStream<EntryData> filteredMarOccidentaleStream = stream
-                .filter( (FilterFunction<EntryData>) entry -> entry.getLon() < Mappa.getCanaleDiSiciliaLon())
-                .name("filtered-stream");
+        //DataStream<EntryData> filteredMarOccidentaleStream = dataStream
+         //       .filter( entry -> entry.getLon() < Mappa.getCanaleDiSiciliaLon())
+          //      .name("filtered-stream");
 
         //week
-        filteredMarOccidentaleStream.keyBy( EntryData::getCella )
+        dataStream.keyBy( EntryData::getCella )
                 .window( TumblingEventTimeWindows.of(Time.days(7)) )
-                .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1())
-                .map( (MapFunction<Result1, String>) resultQuery1 -> resultMap(Calendar.DAY_OF_WEEK,resultQuery1)).name( "query1-weekly")
-                .addSink(new RedisSink<>(FlinkMain.getConf(), new RedisMapperCustom("query1weekly")));
+                .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-weekly")
+                .map( resultQuery1 -> resultMap(Calendar.DAY_OF_WEEK,resultQuery1))
+                .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1_WEEKLY,
+                        new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY1_WEEKLY),
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY1_WEEKLY);
 
         //month
-        filteredMarOccidentaleStream.keyBy( EntryData::getCella )
+        dataStream.keyBy( EntryData::getCella )
                 .window( new MonthWindowAssigner() )
-                .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1())
-                        .map( (MapFunction<Result1, String>) resultQuery1 -> resultMap(Calendar.DAY_OF_MONTH,resultQuery1)).name( "query1-monthly")
-                        .addSink(new RedisSink<>(FlinkMain.getConf(), new RedisMapperCustom("query1monthly")));
+                .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-monthly")
+                .map( resultQuery1 -> resultMap(Calendar.DAY_OF_MONTH,resultQuery1))
+                .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY1_MONTHLY,
+                        new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY1_MONTHLY),
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY1_MONTHLY);
 
 
 

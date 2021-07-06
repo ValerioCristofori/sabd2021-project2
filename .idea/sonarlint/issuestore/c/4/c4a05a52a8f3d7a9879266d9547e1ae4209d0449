@@ -1,17 +1,13 @@
 
-C
-java:S1604;"(Make this anonymous inner class a lambda(Ϋ«¬ώÿÿÿÿ
-C
-java:S1604M"(Make this anonymous inner class a lambda(Ϋ«¬ώÿÿÿÿ
-I
-java:S1905&".Remove this unnecessary cast to "MapFunction".(΄θοόÿÿÿÿ
+L
+java:S1905/"1Remove this unnecessary cast to "ReduceFunction".(ÿσο°ϋÿÿÿÿ
 D
-java:S1905E".Remove this unnecessary cast to "MapFunction".(Λ½Ϋ
+java:S19056".Remove this unnecessary cast to "MapFunction".(¤‰ί“
 B
-java:S1612E",Replace this lambda with a method reference.(Λ½Ϋ
-D
-java:S1905W".Remove this unnecessary cast to "MapFunction".(®Ώς
+java:S16126",Replace this lambda with a method reference.(¤‰ί“
+L
+java:S1905>"1Remove this unnecessary cast to "ReduceFunction".(ÿσο°ϋÿÿÿÿ
+A
+java:S1612E",Replace this lambda with a method reference.(ν‰χ?
 B
-java:S1612W",Replace this lambda with a method reference.(®Ώς
-B
-java:S1068"'Remove this unused "log" private field.(Δ‡ζ²ώÿÿÿÿ
+java:S1068"'Remove this unused "log" private field.(Δ‡ζ²ώÿÿÿÿ

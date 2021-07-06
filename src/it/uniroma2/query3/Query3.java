@@ -26,53 +26,40 @@ import java.util.logging.Logger;
 public class Query3 {
     // trip id: 0xc35c9_10-03-15 12:xx - 10-03-15 13:26
     private static final SimpleDateFormat secondDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
-    private final DataStream<Tuple2<Long, String>> dataStream;
     private Logger log;
-    private final Properties prop;
 
-    public Query3(DataStream<Tuple2<Long, String>> dataStream) {
-        this.dataStream = dataStream;
-        this.prop = KafkaHandler.getProperties("producer");
-        this.run();
-    }
+    public static void topology(DataStream<EntryData> dataStream) {
 
-    private void run() {
-
-        DataStream<EntryData> stream = dataStream.map( (MapFunction<Tuple2<Long, String>, EntryData>) entry -> {
-            String[] records = entry.f1.split(",");
-            return new EntryData(records[0],Double.parseDouble(records[3]),
-                    Double.parseDouble(records[4]), Integer.parseInt(records[1]), entry.f0, records[10]);
-        });
-
+        Properties prop = KafkaHandler.getProperties("producer");
         // keyed stream
-        KeyedStream<EntryData, String> keyedStream = stream.keyBy( EntryData::getTripId );
+        KeyedStream<EntryData, String> keyedStream = dataStream.keyBy( EntryData::getTripId );
 
 
         keyedStream.window(EventTimeSessionWindows.withDynamicGap(new ExtractorSessionWindow()))
                     .trigger( WindowTrigger.createInstance() )
-                    .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3())
-                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(100)))
+                    .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3()).name("Query3-oneHour-first")
+                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(35)))
                     .windowAll( TumblingEventTimeWindows.of(Time.hours(1)) )
                     // global rank
-                    .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3())
+                    .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-oneHour-second")
                     .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_ONEHOUR,
                             new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_ONEHOUR),
                             prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_ONEHOUR);
-
+/*
 
         //two hour
         keyedStream.window( EventTimeSessionWindows.withDynamicGap(new ExtractorSessionWindow()))
                     .trigger( WindowTrigger.createInstance() )
-                    .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3())
-                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(100)))
+                    .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3()).name("Query3-twoHour-first")
+                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(35)))
                     .windowAll( TumblingEventTimeWindows.of(Time.hours(2)) )
                     // global rank
-                    .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3())
+                    .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-twoHour-second")
                         .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_TWOHOUR,
                                 new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_TWOHOUR),
                                 prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_TWOHOUR);
 
-
+*/
 
 
     }

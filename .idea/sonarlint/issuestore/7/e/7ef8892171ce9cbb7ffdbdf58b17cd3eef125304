@@ -1,20 +1,14 @@
 
-v
-java:S1128"[Remove this unused import 'org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer'.(Àß¤¼ûÿÿÿÿ
 Y
-java:S1128"CRemove this unused import 'it.uniroma2.utils.FlinkKafkaSerializer'.(ÙÂ¯¥
-I
-java:S1905(".Remove this unnecessary cast to "MapFunction".(´èïˆüÿÿÿÿ
-G
-java:S1905/"1Remove this unnecessary cast to "FilterFunction".(„ú°§
-D
-java:S19056".Remove this unnecessary cast to "MapFunction".(­¿µé
-I
-java:S1905=".Remove this unnecessary cast to "MapFunction".(±è¸ûÿÿÿÿ
+java:S1128"CRemove this unused import 'org.apache.flink.api.java.tuple.Tuple2'.(§Ùº
+d
+java:S1128
+"NRemove this unused import 'org.apache.flink.api.common.functions.MapFunction'.(ñ±Ø
+l
+java:S1128	"QRemove this unused import 'org.apache.flink.api.common.functions.FilterFunction'.(ĞÜçïıÿÿÿÿ
+V	java:S125!"<This block of commented-out lines of code should be removed.(­ËŠÿÿÿÿÿ
 B
-java:S1602N",Remove useless curly braces around statement(Òâ´á
-N	java:S106R"9Replace this use of System.out or System.err by a logger.(´Ô Ï
+java:S1602C",Remove useless curly braces around statement(Òâ´á
+N	java:S106G"9Replace this use of System.out or System.err by a logger.(´Ô Ï
 B
-java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ
-C
-java:S1068"(Remove this unused "prop" private field.(ú‡óòùÿÿÿÿ
+java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ

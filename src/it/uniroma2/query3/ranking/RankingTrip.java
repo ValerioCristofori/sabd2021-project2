@@ -1,20 +1,24 @@
 package it.uniroma2.query3.ranking;
 
+import it.uniroma2.entity.FirstResult2;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class RankingTrip implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private final static int k = 5;
-    List<Trip> ranking;
+    private final List<Trip> ranking;
 
     public RankingTrip(){
         ranking = new ArrayList<>();
+        for (int i = 0; i < k; i ++){
+            Trip trip = new Trip("",-1);
+            this.add(trip);
+        }
     }
 
     public void add( Trip trip ){
@@ -23,7 +27,14 @@ public class RankingTrip implements Serializable {
 
     public void addTrip( Trip trip ) {
         double distanza = trip.getDistanza();
-        if (ranking.size() < 5) add(trip);
+        int ret = checkIfContain(trip.getTripId());
+        if( ret != -1 ){
+            //matches update distance
+            ranking.remove(ret);
+            ranking.add(ret, trip);
+            reorder();
+            return;
+        }
         if (distanza >= ranking.get(0).getDistanza()) {
 
             if (distanza >= ranking.get(1).getDistanza()) {
@@ -51,6 +62,18 @@ public class RankingTrip implements Serializable {
                 ranking.remove(0);
             }
         }
+    }
+
+    private void reorder() {
+        Collections.sort(ranking, Comparator.comparingDouble(Trip::getDistanza));
+    }
+
+    private int checkIfContain( String tripId ){
+        int ret = -1;
+        for( int i=0; i<ranking.size(); i++ ){
+            if( ranking.get(i).getTripId().equals(tripId)) ret = i;
+        }
+        return ret;
     }
 
     public String getResult(){

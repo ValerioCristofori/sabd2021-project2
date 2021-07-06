@@ -1,5 +1,6 @@
 package it.uniroma2.main;
 
+import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Mappa;
 import it.uniroma2.query1.Query1;
 import it.uniroma2.query2.Query2;
@@ -36,11 +37,6 @@ public class FlinkMain {
         // creo Flink consumer per kafka
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
-        // assegno i watermarks con la granularita' del minuto
-        consumer.assignTimestampsAndWatermarks( WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofMinutes(1)) );
-
-        // Redis sink
-         conf = new FlinkJedisPoolConfig.Builder().setHost("redis").setPort(6379).build();
 
         DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).map( new MapFunction<String, Tuple2<Long, String>>() {
             @Override
@@ -61,13 +57,19 @@ public class FlinkMain {
                 return new Tuple2<>(timestamp,s);
 
             }
+        });
+
+        DataStream<EntryData> stream = dataStream.map(entry -> {
+            String[] records = entry.f1.split(",");
+            return new EntryData(records[0],Double.parseDouble(records[3]),
+                    Double.parseDouble(records[4]), Integer.parseInt(records[1]), entry.f0, records[10]);
         }).name("source");
 
-        new Query1(dataStream);
+        //Query1.topology(stream);
 
-        new Query2(dataStream);
+        //Query2.topology(stream);
 
-        new Query3(dataStream);
+        Query3.topology(stream);
 
         try {
             env.execute("sabd2021-project2");
