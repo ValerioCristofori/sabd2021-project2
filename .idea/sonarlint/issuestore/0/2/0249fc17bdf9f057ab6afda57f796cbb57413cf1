@@ -1,6 +1,6 @@
 
-\
-java:S2184E"FCast one of the operands of this multiplication operation to a "long".(ÕºÒè
+c
+java:S2184E"FCast one of the operands of this multiplication operation to a "long".(ÕºÒè8∂∞÷Êß/
 Y
 java:S1128
 "CRemove this unused import 'org.apache.flink.api.java.tuple.Tuple2'.(ßŸ∫ù
@@ -14,7 +14,6 @@ Q
 java:S1128"<Remove this unused import 'it.uniroma2.query3.ranking.Trip'.(–ÓﬁD
 H
 java:S2885"-Make "secondDateFormat" an instance variable.(˘◊ıùˇˇˇˇˇ
-Q	java:S125<"<This block of commented-out lines of code should be removed.(§ïÁÎ
-o	java:S115E"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÕºÒè
+v	java:S115E"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÕºÒè8»∞÷Êß/
 B
 java:S1068"'Remove this unused "log" private field.(ƒáÊ≤˛ˇˇˇˇ

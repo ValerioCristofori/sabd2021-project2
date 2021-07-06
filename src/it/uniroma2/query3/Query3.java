@@ -45,7 +45,7 @@ public class Query3 {
                     .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_ONEHOUR,
                             new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_ONEHOUR),
                             prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_ONEHOUR);
-/*
+
 
         //two hour
         keyedStream.window( EventTimeSessionWindows.withDynamicGap(new ExtractorSessionWindow()))
@@ -59,7 +59,7 @@ public class Query3 {
                                 new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_TWOHOUR),
                                 prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_TWOHOUR);
 
-*/
+
 
 
     }

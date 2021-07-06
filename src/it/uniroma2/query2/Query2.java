@@ -6,6 +6,7 @@ import it.uniroma2.entity.Result2;
 import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.time.MonthWindowAssigner;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -17,6 +18,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -29,17 +31,19 @@ public class Query2 {
 
         Properties prop = KafkaHandler.getProperties("producer");
 
-        KeyedStream<FirstResult2, Tuple2<String, Integer>> firstKeyedStream = dataStream.keyBy(EntryData::getCella)
-                .window(TumblingEventTimeWindows.of(Time.hours(12)))
-                // lista dei tripId per ogni cella e fascia oraria
-                .aggregate(new FirstAggregatorQuery2(), new FirstProcessWindowFunctionQuery2()).name("Query2-AM/PM")
-                // divido il flusso attraverso coppie dove Stringa = cella e Integer = ora del giorno
-                .keyBy(new KeySelector<FirstResult2, Tuple2<String, Integer>>() {
-                    @Override
-                    public Tuple2<String, Integer> getKey(FirstResult2 value) throws Exception {
-                        return new Tuple2<>(value.getCella(), value.getHour());
-                    }
-                });
+        KeyedStream<FirstResult2, Tuple2<String, Integer>> firstKeyedStream =
+                        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry, timestamp) -> entry.getTimestamp()))
+                                    .keyBy(EntryData::getCella)
+                                    .window(TumblingEventTimeWindows.of(Time.hours(12)))
+                                    // lista dei tripId per ogni cella e fascia oraria
+                                    .aggregate(new FirstAggregatorQuery2(), new FirstProcessWindowFunctionQuery2()).name("Query2-AM/PM")
+                                    // divido il flusso attraverso coppie dove Stringa = cella e Integer = ora del giorno
+                                    .keyBy(new KeySelector<FirstResult2, Tuple2<String, Integer>>() {
+                                        @Override
+                                        public Tuple2<String, Integer> getKey(FirstResult2 value) throws Exception {
+                                            return new Tuple2<>(value.getCella(), value.getHour());
+                                        }
+                                    });
 
         // week
         firstKeyedStream.window( TumblingEventTimeWindows.of(Time.days(7)) )

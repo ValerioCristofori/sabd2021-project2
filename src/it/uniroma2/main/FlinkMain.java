@@ -38,9 +38,9 @@ public class FlinkMain {
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
 
-        DataStream<Tuple2<Long,String>> dataStream = env.addSource(consumer).map( new MapFunction<String, Tuple2<Long, String>>() {
+        DataStream<EntryData> stream = env.addSource(consumer).map( new MapFunction<String, EntryData>() {
             @Override
-            public Tuple2<Long, String> map(String s) throws Exception {
+            public EntryData map(String s) throws Exception {
 
                 System.out.println(s);
                 String[] records = s.split(",");
@@ -54,15 +54,10 @@ public class FlinkMain {
                 }
                 if (timestamp == null)
                     throw new NullPointerException();
-                return new Tuple2<>(timestamp,s);
+                return new EntryData(records[0],Double.parseDouble(records[3]),
+                        Double.parseDouble(records[4]), Integer.parseInt(records[1]), timestamp, records[10]);
 
             }
-        });
-
-        DataStream<EntryData> stream = dataStream.map(entry -> {
-            String[] records = entry.f1.split(",");
-            return new EntryData(records[0],Double.parseDouble(records[3]),
-                    Double.parseDouble(records[4]), Integer.parseInt(records[1]), entry.f0, records[10]);
         }).name("source");
 
         //Query1.topology(stream);

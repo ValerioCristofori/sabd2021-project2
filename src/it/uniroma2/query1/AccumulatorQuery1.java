@@ -5,15 +5,11 @@ import java.util.*;
 
 public class AccumulatorQuery1 implements Serializable {
 
-    private final Map<String, Set<String>> mapForResult; //K e' il tipo, V e' la lista di tutti trip
+    private Map<String, Set<String>> mapForResult; //K e' il tipo, V e' la lista di tutti trip
     // trip per evitare duplicati dati da stesse navi con diverse rotte ( trip e' la chiave del dataset )
 
     public AccumulatorQuery1(){
         this.mapForResult = new HashMap<>();
-    }
-
-    public AccumulatorQuery1( Map<String, Set<String>> mapForResult ){
-        this.mapForResult = mapForResult;
     }
 
     public void add(String shipType, String tripId){

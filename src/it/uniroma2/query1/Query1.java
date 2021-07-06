@@ -6,6 +6,7 @@ import it.uniroma2.entity.Result1;
 import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.utils.time.MonthWindowAssigner;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -15,6 +16,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -33,7 +35,8 @@ public class Query1 {
           //      .name("filtered-stream");
 
         //week
-        dataStream.keyBy( EntryData::getCella )
+        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry,timestamp) -> entry.getTimestamp()))
+                .keyBy( EntryData::getCella )
                 .window( TumblingEventTimeWindows.of(Time.days(7)) )
                 .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-weekly")
                 .map( resultQuery1 -> resultMap(Calendar.DAY_OF_WEEK,resultQuery1))
@@ -42,7 +45,8 @@ public class Query1 {
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY1_WEEKLY);
 
         //month
-        dataStream.keyBy( EntryData::getCella )
+        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry,timestamp) -> entry.getTimestamp()))
+                .keyBy( EntryData::getCella )
                 .window( new MonthWindowAssigner() )
                 .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-monthly")
                 .map( resultQuery1 -> resultMap(Calendar.DAY_OF_MONTH,resultQuery1))

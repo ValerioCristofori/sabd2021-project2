@@ -1,7 +1,5 @@
 package it.uniroma2.entity;
 
-import it.uniroma2.utils.DifferentShipTypes;
-
 import java.io.Serializable;
 
 public class EntryData implements Serializable {
@@ -14,14 +12,14 @@ public class EntryData implements Serializable {
     private String cella;
     private long timestamp;
 
-    public EntryData(String shipId, double lon, double lat,  Integer shipType, long timestamp,String tripId) {
+    public EntryData(String shipId, double lon, double lat,  int shipType, long timestamp,String tripId) {
         this.tripId = tripId;
         this.shipId = shipId;
         this.lat = lat;
         this.lon = lon;
         this.timestamp = timestamp;
 
-        this.shipType = DifferentShipTypes.getTypeShip(shipType);
+        this.shipType = getTypeShip(shipType);
         this.cella = Mappa.findRightCell(lon,lat);
     }
 
@@ -56,5 +54,17 @@ public class EntryData implements Serializable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    private String getTypeShip(int shipType){
+        if(shipType == 35){
+            return String.valueOf(shipType);
+        } else if (shipType >= 60 && shipType <= 69){
+            return "60-69";
+        } else if (shipType >= 70 && shipType <= 79){
+            return "70-79";
+        } else {
+            return "others";
+        }
     }
 }
