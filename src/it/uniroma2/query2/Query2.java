@@ -55,6 +55,7 @@ public class Query2 {
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2_WEEKLY,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2_WEEKLY),
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY2_WEEKLY);
+                //.addSink(new MetricsSink());
 
         // month
         firstKeyedStream.window( new MonthWindowAssigner() )
@@ -67,6 +68,7 @@ public class Query2 {
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2_MONTHLY,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2_MONTHLY),
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY2_MONTHLY);
+                //.addSink(new MetricsSink());
 
     }
 
