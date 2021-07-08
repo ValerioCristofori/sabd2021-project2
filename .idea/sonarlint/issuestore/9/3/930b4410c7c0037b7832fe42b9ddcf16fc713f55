@@ -1,0 +1,10 @@
+
+W
+java:S1128"<Remove this unused import 'it.uniroma2.entity.FirstResult2'.(ùŞ¶åüÿÿÿÿ
+M
+java:S1128"7Remove this unused import 'java.text.SimpleDateFormat'.(ú¡ÙÛ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(»ƒë˜şÿÿÿÿ
+`
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(»ƒë˜şÿÿÿÿ
+m
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(íÿŠşÿÿÿÿ

@@ -19,12 +19,14 @@ public class FirstAccumulatorQuery3 implements Serializable {
     }
 
     public void add( double newLon, double newLat, long timestamp ){
-        if( lastLon != Double.MAX_VALUE && lastLat != Double.MAX_VALUE ){
+        if( this.lastLon != Double.MAX_VALUE && this.lastLat != Double.MAX_VALUE ){
             // non e' il primo punto
-            distanzaTotale = distanzaTotale + Mappa.distance(lastLat,lastLon,newLat,newLon,'K');
+            distanzaTotale = Mappa.getDistanzaEuclidea(this.lastLat,this.lastLon,newLat,newLon);
+        }else{
+            // e' il primo punto
+            this.lastLon = newLon;
+            this.lastLat = newLat;
         }
-        lastLon = newLon;
-        lastLat = newLat;
         this.ultimoTimestamp = timestamp;
     }
 

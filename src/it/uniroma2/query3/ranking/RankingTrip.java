@@ -80,7 +80,10 @@ public class RankingTrip implements Serializable {
         StringBuilder entryResultBld = new StringBuilder();
 
         for( int i=this.ranking.size()-1; i>=0; i-- ){
-            entryResultBld.append(",").append( this.ranking.get(i).getTripId() ).append(",").append( this.ranking.size() - i);
+            if( !this.ranking.get(i).getTripId().equals("") )
+                entryResultBld.append(",").append( this.ranking.get(i).getTripId() ).append(",").append( String.format(Locale.ENGLISH,"%.2f", this.ranking.get(i).getDistanza() ));
+            else
+                entryResultBld.append(",").append("null").append(",").append("null");
         }
         return entryResultBld.toString();
     }

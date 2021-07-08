@@ -63,6 +63,9 @@ public class Mappa {
     }
 
 
-
-
+    public static double getDistanzaEuclidea(double lastLat, double lastLon, double newLat, double newLon) {
+        double lon = newLon - lastLon;
+        double lat = newLat - lastLat;
+        return Math.sqrt(lon*lon + lat*lat);
+    }
 }

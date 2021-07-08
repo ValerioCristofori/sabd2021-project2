@@ -53,12 +53,12 @@ public class FlinkMain {
 
             }
         })
-                //.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry, timestamp) -> entry.getTimestamp()))
+                .assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry, timestamp) -> entry.getTimestamp()))
                 .name("source");
 
-        //Query1.topology(stream);
+        Query1.topology(stream);
 
-        //Query2.topology(stream);
+        Query2.topology(stream);
 
         Query3.topology(stream);
 
