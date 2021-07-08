@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class FirstAccumulatorQuery3 implements Serializable {
 
-    private final Map<String, Trip> tripList;
+
     private String tripId;
     private long lastTimestamp;
     private double lon;
@@ -19,12 +19,13 @@ public class FirstAccumulatorQuery3 implements Serializable {
 
 
     public FirstAccumulatorQuery3(){
-        this.tripList = new HashMap<>();
+        this.distanzaTotale = 0;
+        this.lat = 0;
+        this.lon = 0;
+        this.lastTimestamp = 0;
+        this.tripId = null;
     }
 
-    public Map<String, Trip> getTripList() {
-        return tripList;
-    }
 
     public long getLastTimestamp() {
         return lastTimestamp;

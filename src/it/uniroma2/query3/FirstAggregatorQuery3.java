@@ -9,18 +9,27 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, FirstAccumulatorQuery3, Tuple2<Long, Double>> {
+
+    private Map<String, Trip> tripList;
+
+    public FirstAggregatorQuery3() {
+        this.tripList = new HashMap<>();
+    }
+
+
     @Override
     public FirstAccumulatorQuery3 createAccumulator() {
         return new FirstAccumulatorQuery3();
     }
 
-    public void cleanUpTripList(long date, FirstAccumulatorQuery3 acc){
+    public void cleanUpTripList(long date){
 
-        Iterator iter = acc.getTripList().entrySet().iterator();
+        Iterator iter = this.tripList.entrySet().iterator();
 
         while(iter.hasNext()){
             Map.Entry<String, Trip> trip = (Map.Entry)iter.next();
@@ -33,15 +42,15 @@ public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, First
 
     @Override
     public FirstAccumulatorQuery3 add(EntryData entryData, FirstAccumulatorQuery3 firstAccumulatorQuery3) {
-        if( firstAccumulatorQuery3.getTripList().isEmpty() ) {
+        if( firstAccumulatorQuery3.getTripId() == null ) {
             // new window
             String trip_id = entryData.getTripId();
 
             firstAccumulatorQuery3.setTripId(trip_id);
             firstAccumulatorQuery3.setLastTimestamp(entryData.getTimestamp());
-            Trip trip = firstAccumulatorQuery3.getTripList().get(trip_id);
+            Trip trip = this.tripList.get(trip_id);
 
-            cleanUpTripList(entryData.getTimestamp(), firstAccumulatorQuery3); // Remove finished trips
+            cleanUpTripList(entryData.getTimestamp()); // Remove finished trips
 
             if(trip == null){
                 // First couple (lon,lat) found !!!
@@ -54,7 +63,7 @@ public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, First
                     e.printStackTrace();
                 }
 
-                firstAccumulatorQuery3.getTripList().put(trip_id, new Trip(entryData.getLon(), entryData.getLat(), trip_end.getTime())); // Add trip to list
+                this.tripList.put(trip_id, new Trip(entryData.getLon(), entryData.getLat(), trip_end.getTime())); // Add trip to list
 
             }
             else{
@@ -83,6 +92,11 @@ public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, First
 
     @Override
     public FirstAccumulatorQuery3 merge(FirstAccumulatorQuery3 acc1, FirstAccumulatorQuery3 acc2) {
-        return null;
+        if( acc1.getLastTimestamp() > acc2.getLastTimestamp() ){
+            return acc1;
+        }
+        else{
+            return acc2;
+        }
     }
 }

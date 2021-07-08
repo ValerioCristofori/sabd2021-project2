@@ -1,28 +1,9 @@
 
-^
-java:S1128"CRemove this unused import 'org.apache.flink.api.java.tuple.Tuple3'.(À³ÏÆøÿÿÿÿ
-Y
-java:S1128
-"CRemove this unused import 'org.apache.flink.api.java.tuple.Tuple2'.(§Ùº
-A
-java:S1128"+Remove this unused import 'java.util.Date'.(¸…¼ü
-‚
-java:S1128"gRemove this unused import 'org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows'.(ˆÜÄ·øÿÿÿÿ
-o
-java:S1128"TRemove this unused import 'org.apache.flink.api.common.eventtime.WatermarkStrategy'.(€‰‹øÿÿÿÿ
-d
-java:S1128	"NRemove this unused import 'org.apache.flink.api.common.functions.MapFunction'.(ñ±Ø
-Y
-java:S1128"CRemove this unused import 'it.uniroma2.query3.ranking.RankingTrip'.(©¹À£
-Q
-java:S1128"<Remove this unused import 'it.uniroma2.query3.ranking.Trip'.(ĞîŞD
-Š
-java:S1128"mRemove this unused import 'org.apache.flink.streaming.api.windowing.assigners.SessionWindowTimeGapExtractor'.(—Øû†8×é®¨/
-J
-java:S1128"/Remove this unused import 'java.time.Duration'.(ëá¯‰üÿÿÿÿ
 H
-java:S2885"-Make "secondDateFormat" an instance variable.(ù×õÿÿÿÿÿ
+java:S2885"-Make "secondDateFormat" an instance variable.(ù×õÿÿÿÿÿ
+]	java:S125""<This block of commented-out lines of code should be removed.(æ–í›üÿÿÿÿ8ñ©ˆ¼¨/
+]	java:S125+"<This block of commented-out lines of code should be removed.(æ–í›üÿÿÿÿ8ô©ˆ¼¨/
 O
-java:S1068"4Remove this unused "secondDateFormat" private field.(ù×õÿÿÿÿÿ
+java:S1068"4Remove this unused "secondDateFormat" private field.(ù×õÿÿÿÿÿ
 B
-java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ
+java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ
