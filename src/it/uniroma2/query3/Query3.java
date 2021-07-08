@@ -1,26 +1,15 @@
 package it.uniroma2.query3;
 
 import it.uniroma2.entity.EntryData;
-import it.uniroma2.metrics.MetricsSink;
-import it.uniroma2.query3.ranking.RankingTrip;
-import it.uniroma2.query3.ranking.Trip;
 import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.kafka.KafkaHandler;
-import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
-import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows;
-import org.apache.flink.streaming.api.windowing.assigners.SessionWindowTimeGapExtractor;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 

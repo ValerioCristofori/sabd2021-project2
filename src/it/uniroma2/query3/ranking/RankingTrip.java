@@ -1,9 +1,6 @@
 package it.uniroma2.query3.ranking;
 
-import it.uniroma2.entity.FirstResult2;
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RankingTrip implements Serializable {
@@ -11,27 +8,27 @@ public class RankingTrip implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final static int k = 5;
-    private final List<Trip> ranking;
+    private final List<RankEntity> ranking;
 
     public RankingTrip(){
         ranking = new ArrayList<>();
         for (int i = 0; i < k; i ++){
-            Trip trip = new Trip("",-1);
-            this.add(trip);
+            RankEntity rankEntity = new RankEntity("",-1);
+            this.add(rankEntity);
         }
     }
 
-    public void add( Trip trip ){
-        this.ranking.add(trip);
+    public void add( RankEntity rankEntity){
+        this.ranking.add(rankEntity);
     }
 
-    public void addTrip( Trip trip ) {
-        double distanza = trip.getDistanza();
-        int ret = checkIfContain(trip.getTripId());
+    public void addTrip( RankEntity rankEntity) {
+        double distanza = rankEntity.getDistanza();
+        int ret = checkIfContain(rankEntity.getTripId());
         if( ret != -1 ){
             //matches update distance
             ranking.remove(ret);
-            ranking.add(ret, trip);
+            ranking.add(ret, rankEntity);
             reorder();
             return;
         }
@@ -41,31 +38,31 @@ public class RankingTrip implements Serializable {
                 if (distanza >= ranking.get(2).getDistanza()) {
                     if (distanza >= ranking.get(3).getDistanza()) {
                         if (distanza >= ranking.get(4).getDistanza()) {
-                            ranking.add(5, trip);
+                            ranking.add(5, rankEntity);
                             ranking.remove(0);
                         } else {
-                            ranking.add(4, trip);
+                            ranking.add(4, rankEntity);
                             ranking.remove(0);
                         }
 
                     } else {
-                        ranking.add(3, trip);
+                        ranking.add(3, rankEntity);
                         ranking.remove(0);
                     }
 
                 } else {
-                    ranking.add(2, trip);
+                    ranking.add(2, rankEntity);
                     ranking.remove(0);
                 }
             } else {
-                ranking.add(1, trip);
+                ranking.add(1, rankEntity);
                 ranking.remove(0);
             }
         }
     }
 
     private void reorder() {
-        Collections.sort(ranking, Comparator.comparingDouble(Trip::getDistanza));
+        Collections.sort(ranking, Comparator.comparingDouble(RankEntity::getDistanza));
     }
 
     private int checkIfContain( String tripId ){

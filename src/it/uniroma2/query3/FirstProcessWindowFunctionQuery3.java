@@ -1,12 +1,12 @@
 package it.uniroma2.query3;
 
-import it.uniroma2.query3.ranking.Trip;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FirstProcessWindowFunctionQuery3 extends ProcessWindowFunction<Tuple2<Long, Double> , Tuple3<String, Long, Double>, String, TimeWindow> {
