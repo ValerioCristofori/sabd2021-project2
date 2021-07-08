@@ -1,6 +1,7 @@
 package it.uniroma2.query3;
 
 import it.uniroma2.entity.EntryData;
+import it.uniroma2.metrics.MetricsSink;
 import it.uniroma2.query3.ranking.RankingTrip;
 import it.uniroma2.query3.ranking.Trip;
 import it.uniroma2.utils.FlinkKafkaSerializer;
@@ -35,12 +36,13 @@ public class Query3 {
         KeyedStream<EntryData, String> keyedStream = dataStream.keyBy( EntryData::getTripId );
 
         keyedStream.window( TumblingEventTimeWindows.of( Time.hours(1)))
-                    .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3())
-                    .windowAll(TumblingEventTimeWindows.of(Time.hours(1)))
-                    .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-oneHour-second")
-                    .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_ONEHOUR,
-                            new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_ONEHOUR),
-                            prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_ONEHOUR);
+                .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3())
+                .windowAll(TumblingEventTimeWindows.of(Time.hours(1)))
+                .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-oneHour-second")
+                .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_ONEHOUR,
+                        new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_ONEHOUR),
+                        prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_ONEHOUR);
+                //.addSink(new MetricsSink());
 
         keyedStream.window( TumblingEventTimeWindows.of( Time.hours(2)))
                 .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3())
@@ -49,7 +51,7 @@ public class Query3 {
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY3_TWOHOUR,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_TWOHOUR),
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_TWOHOUR);
-
+                //.addSink(new MetricsSink());
 
 
 
