@@ -6,19 +6,15 @@ import it.uniroma2.entity.Result1;
 import it.uniroma2.kafka.KafkaHandler;
 import it.uniroma2.utils.FlinkKafkaSerializer;
 import it.uniroma2.utils.time.MonthWindowAssigner;
-import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -30,12 +26,12 @@ public class Query1 {
 
         Properties prop = KafkaHandler.getProperties("producer");
 
-        //DataStream<EntryData> filteredMarOccidentaleStream = dataStream
-         //       .filter( entry -> entry.getLon() < Mappa.getCanaleDiSiciliaLon())
-          //      .name("filtered-stream");
+        DataStream<EntryData> filteredStream = dataStream
+                .filter( entry -> entry.getLon() < Mappa.getCanaleDiSiciliaLon())
+                .name("filtered-stream");
 
         //week
-        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry,timestamp) -> entry.getTimestamp()))
+        filteredStream
                 .keyBy( EntryData::getCella )
                 .window( TumblingEventTimeWindows.of(Time.days(7)) )
                 .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-weekly")
@@ -45,7 +41,7 @@ public class Query1 {
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY1_WEEKLY);
 
         //month
-        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry,timestamp) -> entry.getTimestamp()))
+        filteredStream
                 .keyBy( EntryData::getCella )
                 .window( new MonthWindowAssigner() )
                 .aggregate( new AggregatorQuery1(), new ProcessWindowFunctionQuery1()).name("Query1-monthly")
@@ -64,15 +60,21 @@ public class Query1 {
         StringBuilder entryResultBld = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date timestampInit = resultQuery1.getTimestamp();
+        double d;
         entryResultBld.append(simpleDateFormat.format(timestampInit))
                 .append(",")
-                .append(resultQuery1.getCella())
-                .append(",");
-        resultQuery1.getResultMap().forEach( (key,value) -> {
-            entryResultBld.append(key).append(",").append(String.format( "%.2f", (double) value/days));
+                .append(resultQuery1.getCella());
+        for(int i=0; i< Mappa.getShipTypes().length ; i++){
+            String type = Mappa.getShipTypes()[i];
+            Integer v = resultQuery1.getResultMap().get(type);
+            if(v == null){
+                entryResultBld.append(",").append(type).append(",");
+            } else {
 
-        });
-        System.out.println(entryResultBld);
+                d = ((double)v)  / days;
+                entryResultBld.append(",").append(type).append(",").append(String.format(Locale.ENGLISH,"%.2f",d));
+            }
+        }
         return entryResultBld.toString();
     }
 

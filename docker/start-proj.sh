@@ -22,7 +22,7 @@ $KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-fa
 sleep 3
 
 #run flink program with parallelism
-sh $FLINK_HOME/flink run --parallelism 12 -d -c "it.uniroma2.main.FlinkMain" ./target/sabd2021-project2-1.0-jar-with-dependencies.jar
+sh $FLINK_HOME/flink run --parallelism 3 -d -c "it.uniroma2.main.FlinkMain" ./target/sabd2021-project2-1.0-jar-with-dependencies.jar
 
 #wait for flink run
 sleep 5

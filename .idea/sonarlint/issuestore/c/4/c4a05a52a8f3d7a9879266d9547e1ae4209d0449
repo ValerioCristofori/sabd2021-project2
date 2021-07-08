@@ -1,13 +1,0 @@
-
-L
-java:S19053"1Remove this unnecessary cast to "ReduceFunction".(ÿσο°ϋÿÿÿÿ
-D
-java:S1905:".Remove this unnecessary cast to "MapFunction".(¤‰ί“
-B
-java:S1612:",Replace this lambda with a method reference.(¤‰ί“
-L
-java:S1905B"1Remove this unnecessary cast to "ReduceFunction".(ÿσο°ϋÿÿÿÿ
-A
-java:S1612I",Replace this lambda with a method reference.(ν‰χ?
-B
-java:S1068"'Remove this unused "log" private field.(Δ‡ζ²ώÿÿÿÿ

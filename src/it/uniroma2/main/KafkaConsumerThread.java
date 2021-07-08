@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class KafkaConsumerThread implements Runnable{
 
-    private final static int POLL_WAIT_TIME = 10;
+    private final static int POLL_WAIT_TIME = 1000;
     private final Consumer<Long, String> consumer;
     private final int id;
     private final String topic;
@@ -50,7 +50,6 @@ public class KafkaConsumerThread implements Runnable{
         System.out.println("Flink Consumer " + id + " running");
         try {
             while (running) {
-                Thread.sleep(50);
                 ConsumerRecords<Long, String> records = consumer.poll(Duration.ofMillis(POLL_WAIT_TIME));
 
                 if (!records.isEmpty()) {
@@ -75,9 +74,7 @@ public class KafkaConsumerThread implements Runnable{
                     writer.close();
                 }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }catch (IOException e) {
         e.printStackTrace();
         System.err.println("Could not export result to " + path);
 

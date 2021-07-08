@@ -1,5 +1,7 @@
 package it.uniroma2.entity;
 
+import java.util.List;
+
 public class Mappa {
     private static final double minLon = -6.0;
     private static final double maxLon = 37.0;
@@ -10,9 +12,13 @@ public class Mappa {
     private static final double dim_cella_x = ( maxLon - minLon )/celle_x;
     private static final double dim_cella_y = ( maxLat - minLat )/celle_y;;
     private static final double canaleDiSiciliaLon = 12.0;
+    private static final String[] shipTypes = {"35","60-69","70-79","others"};
 
     public static double getCanaleDiSiciliaLon() {
         return canaleDiSiciliaLon;
+    }
+    public static String[] getShipTypes() {
+        return shipTypes;
     }
 
     public static double getLonByCella(String cella){

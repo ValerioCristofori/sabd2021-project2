@@ -34,11 +34,11 @@ public class Query3 {
         // keyed stream
         KeyedStream<EntryData, String> keyedStream = dataStream.keyBy( EntryData::getTripId );
 
-
+        //one hour
         keyedStream.window(EventTimeSessionWindows.withDynamicGap(new ExtractorSessionWindow()))
                     .trigger( WindowTrigger.createInstance() )
                     .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3()).name("Query3-oneHour-first")
-                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(35)))
+                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(1)))
                     .windowAll( TumblingEventTimeWindows.of(Time.hours(1)) )
                     // global rank
                     .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-oneHour-second")
@@ -46,12 +46,12 @@ public class Query3 {
                             new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_ONEHOUR),
                             prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_ONEHOUR);
 
-
+/*
         //two hour
         keyedStream.window( EventTimeSessionWindows.withDynamicGap(new ExtractorSessionWindow()))
                     .trigger( WindowTrigger.createInstance() )
                     .aggregate( new FirstAggregatorQuery3(), new FirstProcessWindowFunctionQuery3()).name("Query3-twoHour-first")
-                    .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(35)))
+                    //.assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple3<String, Long, Double>>forMonotonousTimestamps().withTimestampAssigner((event, timestamp) -> event.f1).withIdleness(Duration.ofMillis(35)))
                     .windowAll( TumblingEventTimeWindows.of(Time.hours(2)) )
                     // global rank
                     .aggregate( new AggregatorQuery3(), new ProcessWindowFunctionQuery3()).name("Query3-twoHour-second")
@@ -59,7 +59,7 @@ public class Query3 {
                                 new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY3_TWOHOUR),
                                 prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY3_TWOHOUR);
 
-
+*/
 
 
     }

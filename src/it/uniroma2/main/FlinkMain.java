@@ -1,22 +1,16 @@
 package it.uniroma2.main;
 
 import it.uniroma2.entity.EntryData;
-import it.uniroma2.entity.Mappa;
 import it.uniroma2.query1.Query1;
 import it.uniroma2.query2.Query2;
 import it.uniroma2.query3.Query3;
 import it.uniroma2.kafka.KafkaHandler;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.configuration.Configuration;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import org.apache.flink.streaming.connectors.redis.common.config.FlinkJedisPoolConfig;
-import org.apache.flink.util.Collector;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +18,6 @@ import java.time.Duration;
 
 public class FlinkMain {
 
-    private static FlinkJedisPoolConfig conf;
     private static final SimpleDateFormat[] dateFormats = {new SimpleDateFormat("dd/MM/yy HH:mm"),
             new SimpleDateFormat("dd-MM-yy HH:mm")} ;
 
@@ -37,6 +30,7 @@ public class FlinkMain {
         // creo Flink consumer per kafka
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
+
 
         DataStream<EntryData> stream = env.addSource(consumer).map( new MapFunction<String, EntryData>() {
             @Override
@@ -58,7 +52,9 @@ public class FlinkMain {
                         Double.parseDouble(records[4]), Integer.parseInt(records[1]), timestamp, records[10]);
 
             }
-        }).name("source");
+        })
+                //.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry, timestamp) -> entry.getTimestamp()))
+                .name("source");
 
         //Query1.topology(stream);
 
@@ -85,7 +81,4 @@ public class FlinkMain {
 
     }
 
-    public static FlinkJedisPoolConfig getConf() {
-        return conf;
-    }
 }

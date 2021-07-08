@@ -31,8 +31,7 @@ public class Query2 {
 
         Properties prop = KafkaHandler.getProperties("producer");
 
-        KeyedStream<FirstResult2, Tuple2<String, Integer>> firstKeyedStream =
-                        dataStream.assignTimestampsAndWatermarks( WatermarkStrategy.<EntryData>forBoundedOutOfOrderness(Duration.ofMinutes(1)).withTimestampAssigner( (entry, timestamp) -> entry.getTimestamp()))
+        KeyedStream<FirstResult2, Tuple2<String, Integer>> firstKeyedStream = dataStream
                                     .keyBy(EntryData::getCella)
                                     .window(TumblingEventTimeWindows.of(Time.hours(12)))
                                     // lista dei tripId per ogni cella e fascia oraria
@@ -48,14 +47,11 @@ public class Query2 {
         // week
         firstKeyedStream.window( TumblingEventTimeWindows.of(Time.days(7)) )
                 // per ogni cella e ogni ora trovo il grado di frequentazione totale
-                .reduce((ReduceFunction<FirstResult2>) (value1, value2) -> {
-                    value1.setFrequentazione(value1.getFrequentazione()+value2.getFrequentazione());
-                    return value1;
-                })
+                .reduce(Query2::reduce)
                 .keyBy(FirstResult2::getMare)
                 .window( TumblingEventTimeWindows.of(Time.days(7)) )
                 .aggregate(new AggregatorQuery2(), new ProcessWindowFunctionQuery2()).name("Query2-weekly")
-                .map((MapFunction<Result2, String>) resultQuery2 -> resultMap(resultQuery2))
+                .map( Query2::resultMap)
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2_WEEKLY,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2_WEEKLY),
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY2_WEEKLY);
@@ -63,14 +59,11 @@ public class Query2 {
         // month
         firstKeyedStream.window( new MonthWindowAssigner() )
                 // per ogni cella e ogni ora trovo il grado di frequentazione totale
-                .reduce((ReduceFunction<FirstResult2>) (value1, value2) -> {
-                    value1.setFrequentazione(value1.getFrequentazione()+value2.getFrequentazione());
-                    return value1;
-                })
+                .reduce(Query2::reduce)
                 .keyBy(FirstResult2::getMare)
                 .window( new MonthWindowAssigner() )
                 .aggregate(new AggregatorQuery2(), new ProcessWindowFunctionQuery2()).name("Query2-monthly")
-                .map( resultQuery2 -> resultMap(resultQuery2))
+                .map( Query2::resultMap )
                 .addSink(new FlinkKafkaProducer<>(KafkaHandler.TOPIC_QUERY2_MONTHLY,
                         new FlinkKafkaSerializer(KafkaHandler.TOPIC_QUERY2_MONTHLY),
                         prop, FlinkKafkaProducer.Semantic.EXACTLY_ONCE)).name("Sink-"+KafkaHandler.TOPIC_QUERY2_MONTHLY);
@@ -97,6 +90,11 @@ public class Query2 {
         }
 
         return entryResultBld.toString();
+    }
+
+    private static FirstResult2 reduce(FirstResult2 value1, FirstResult2 value2) {
+        value1.setFrequentazione(value1.getFrequentazione() + value2.getFrequentazione());
+        return value1;
     }
 
 }

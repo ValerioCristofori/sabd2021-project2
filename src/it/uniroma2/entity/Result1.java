@@ -9,10 +9,10 @@ public class Result1 implements Serializable{
     private String cella;
     private Map<String, Integer> resultMap; // K e' il tipo delle navi, V sono le navi contate per quel tipo
 
-    public Result1(Map<String, Set<String>> mapTrips ){
+    public Result1(Map<String, Set<String>> mapTrips ) {
         resultMap = new HashMap<>();
-        for ( String type : mapTrips.keySet() ){
-            resultMap.put( type, mapTrips.get(type).size()); // prendi il conteggio
+        for (String type : mapTrips.keySet()) {
+            resultMap.put(type, mapTrips.get(type).size()); // prendi il conteggio
         }
     }
 
