@@ -20,42 +20,13 @@ public class DataSource {
             new SimpleDateFormat("dd-MM-yy HH:mm")} ;
     private static final String path = "data/prj2_dataset_imported.csv";
     private static final long duration = 5*60*1000; // durata di 5 minuti in millisecondi
+    private static Map<Long, List<String>> map = new TreeMap<>(); //mappa contenente: K e' l'event time, V e' la lista dei record del csv
+    private static long min;
+    private static long max;
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
 
-        Map<Long, List<String>> map = new TreeMap<>(); //mappa contenente: K e' l'event time, V e' la lista dei record del csv
-        long min = Long.MAX_VALUE;
-        long max = Long.MIN_VALUE;
-
-
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] values = line.split(",");
-                String dateString = values[7]; //prendo il timestamp
-                Long timestamp = null;
-                for (SimpleDateFormat dateFormat: dateFormats) {
-                    // provo il parsing per entrambi i formati
-                    try {
-                        timestamp = dateFormat.parse(dateString).getTime();
-                        break;
-                    } catch (ParseException ignored) { }
-                }
-
-                if (timestamp == null) {
-                    System.exit(-1);
-                }
-
-                min = (min < timestamp) ? min : timestamp;
-                max = (max > timestamp) ? max : timestamp;
-                List<String> records = map.computeIfAbsent(timestamp, k -> new ArrayList<>());
-                records.add(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-        }
+        buildTimeGap();
 
         // instanzio un producer per Kafka che andra' ad inserire
         //      i dati nel topic
@@ -91,5 +62,39 @@ public class DataSource {
 
     }
 
+    private static void buildTimeGap() {
+        min = Long.MAX_VALUE;
+        max = Long.MIN_VALUE;
+
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                String dateString = values[7]; //prendo il timestamp
+                Long timestamp = null;
+                for (SimpleDateFormat dateFormat: dateFormats) {
+                    // provo il parsing per entrambi i formati
+                    try {
+                        timestamp = dateFormat.parse(dateString).getTime();
+                        break;
+                    } catch (ParseException ignored) { }
+                }
+
+                if (timestamp == null) {
+                    System.exit(-1);
+                }
+
+                if( min >= timestamp )  min = timestamp;
+                if (max <= timestamp)  max = timestamp;
+                List<String> records = map.computeIfAbsent(timestamp, k -> new ArrayList<>());
+                records.add(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+        }
+    }
 
 }
+

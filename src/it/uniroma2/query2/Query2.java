@@ -94,14 +94,14 @@ public class Query2 {
                 .append(resultQuery2.getMare()).append(",")
                 .append("00:00-11:59");
 
-        for(FirstResult2 res : resultQuery2.getMattinaTop3()){
-            entryResultBld.append(",").append(res.getCella());
+        for(int i=resultQuery2.getMattinaTop3().size()-1; i>=0; i--){
+            entryResultBld.append(",").append(resultQuery2.getMattinaTop3().get(i).getCella());
         }
 
         entryResultBld.append(",").append("12:00-23:59");
 
-        for(FirstResult2 res : resultQuery2.getPomeriggioTop3()){
-            entryResultBld.append(",").append(res.getCella());
+        for(int i=resultQuery2.getPomeriggioTop3().size()-1; i>=0; i--){
+            entryResultBld.append(",").append(resultQuery2.getPomeriggioTop3().get(i).getCella());
         }
 
         return entryResultBld.toString();
