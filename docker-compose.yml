@@ -42,7 +42,7 @@ services:
 
     kafka_broker_1:
         image: effeerre/kafka
-        container_name: kafka_broker_1
+        container_name: kafka
         depends_on:
             - zookeeper
         links:

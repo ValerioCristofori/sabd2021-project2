@@ -13,15 +13,11 @@ public class FirstResult2 {
     public FirstResult2(int i) {
         this.frequentazione = i;
     }
-
-    public void setMareByCella(String cella){
-        // prendo valore della longitudine nell'id della cella
-        if (Mappa.getLonByCella(cella) < Mappa.getCanaleDiSiciliaLon()){
-            this.mare = "Occidentale";
-        } else {
-            this.mare = "Orientale";
-        }
+    public FirstResult2(Set<String> frequentazione){
+        this.frequentazione = frequentazione.size();
     }
+
+
 
     public String getMare(){
         return mare;
@@ -29,6 +25,15 @@ public class FirstResult2 {
 
     public String getCella(){
         return cella;
+    }
+
+    public void setMareByCella(String cella){
+        // in base alla cella imposto il tipo di mare
+        if (Mappa.getLonByCella(cella) < Mappa.getCanaleDiSiciliaLon()){
+            this.mare = "Occidentale";
+        } else {
+            this.mare = "Orientale";
+        }
     }
 
     public void setCella(String cella){
@@ -52,13 +57,11 @@ public class FirstResult2 {
         this.frequentazione = frequentazione;
     }
 
-    public int getHour(){
+    public int getHourOfTimestamp(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-    public FirstResult2(Set<String> frequentazione){
-        this.frequentazione = frequentazione.size();
-    }
+
 }

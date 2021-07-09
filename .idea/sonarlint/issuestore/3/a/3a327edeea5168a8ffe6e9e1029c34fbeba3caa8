@@ -3,13 +3,12 @@ G
 java:S1128"1Remove this unused import 'java.util.Properties'.(¬µŽ²
 J
 java:S1128	"/Remove this unused import 'java.time.Duration'.(ëá¯‰üÿÿÿÿ
+R
+java:S1128"5Remove this unused import 'java.util.logging.Logger'.(ƒ¥óš8¤ÎáÒ¨/
 M
 java:S1128"2Remove this unused import 'java.util.Collections'.(¢³ïÓþÿÿÿÿ
-S	java:S106"9Replace this use of System.out or System.err by a logger.(©ñíÝùÿÿÿÿ
-N	java:S106)"9Replace this use of System.out or System.err by a logger.(¨Õê¢
-S	java:S106-"9Replace this use of System.out or System.err by a logger.(¤¬´ñüÿÿÿÿ
-N	java:S1062"9Replace this use of System.out or System.err by a logger.(ÚŽÂâ
-S	java:S1063"9Replace this use of System.out or System.err by a logger.(×÷åÒýÿÿÿÿ
-S	java:S106<"9Replace this use of System.out or System.err by a logger.(Œ°Éúÿÿÿÿ
-B
-java:S1068"'Remove this unused "log" private field.(ðÛÖœþÿÿÿÿ
+S	java:S106'"9Replace this use of System.out or System.err by a logger.( «ùÿÿÿÿ
+S	java:S106*"9Replace this use of System.out or System.err by a logger.(¤¬´ñüÿÿÿÿ
+N	java:S106/"9Replace this use of System.out or System.err by a logger.(ÚŽÂâ
+N	java:S1060"9Replace this use of System.out or System.err by a logger.(”±­ü
+S	java:S1069"9Replace this use of System.out or System.err by a logger.(Œ°Éúÿÿÿÿ

@@ -18,8 +18,8 @@ public class EntryData implements Serializable {
         this.lat = lat;
         this.lon = lon;
         this.timestamp = timestamp;
-
         this.shipType = getTypeShip(shipType);
+        //get cella in formato es. "A10"
         this.cella = Mappa.findRightCell(lon,lat);
     }
 

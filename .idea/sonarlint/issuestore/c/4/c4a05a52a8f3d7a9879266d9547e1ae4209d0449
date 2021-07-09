@@ -1,12 +1,7 @@
 
-o
-java:S1128	"TRemove this unused import 'org.apache.flink.api.common.eventtime.WatermarkStrategy'.(€‰‹øÿÿÿÿ
-d
-java:S1128
-"NRemove this unused import 'org.apache.flink.api.common.functions.MapFunction'.(ñ±Ø
-J
-java:S1128"/Remove this unused import 'java.time.Duration'.(ëá¯‰üÿÿÿÿ
-l
-java:S1128"QRemove this unused import 'org.apache.flink.api.common.functions.ReduceFunction'.(Äåæ«ûÿÿÿÿ
-B
-java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ
+K
+java:S1128"5Remove this unused import 'java.util.logging.Logger'.(ƒ¥óš
+U
+java:S1118"":Add a private constructor to hide the implicit public one.(‹¿üşşÿÿÿÿ
+V	java:S125C"<This block of commented-out lines of code should be removed.(¼šÛ¤øÿÿÿÿ
+V	java:S125T"<This block of commented-out lines of code should be removed.(¹şË’ûÿÿÿÿ

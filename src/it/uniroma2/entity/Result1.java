@@ -12,7 +12,7 @@ public class Result1 implements Serializable{
     public Result1(Map<String, Set<String>> mapTrips ) {
         resultMap = new HashMap<>();
         for (String type : mapTrips.keySet()) {
-            resultMap.put(type, mapTrips.get(type).size()); // prendi il conteggio
+            resultMap.put(type, mapTrips.get(type).size()); // prendo il conteggio
         }
     }
 

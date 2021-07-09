@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
+/**
+ * classe responsabile di creare TimeWindow di intervalli mensili rispetto all'event time dei record
+ */
 public class MonthWindowAssigner extends TumblingEventTimeWindows {
 
     public MonthWindowAssigner() {

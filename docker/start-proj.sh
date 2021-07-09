@@ -10,13 +10,13 @@ sleep 3
 sh $FLINK_HOME/start-cluster.sh
 
 #create topics
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic flink-topic
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query1weekly
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query1monthly
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query2weekly
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query2monthly
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query3oneHour
-$KAFKA_HOME/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 2 --partitions 1 --topic query3twoHour
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic flink-topic
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query1weekly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query1monthly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query2weekly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query2monthly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query3oneHour
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 2 --partitions 1 --topic query3twoHour
 
 
 sleep 3

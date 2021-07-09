@@ -2,7 +2,7 @@ package it.uniroma2.query3;
 
 import it.uniroma2.entity.EntryData;
 import it.uniroma2.entity.Mappa;
-import it.uniroma2.entity.Trip;
+import it.uniroma2.entity.StartTrip;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, FirstAccumulatorQuery3, Tuple2<Long, Double>> {
 
-    private Map<String, Trip> tripList;
+    private Map<String, StartTrip> tripList; // K e' il tripId, V e' il viaggio iniziale
 
     public FirstAggregatorQuery3() {
         this.tripList = new HashMap<>();
@@ -27,61 +27,52 @@ public class FirstAggregatorQuery3 implements AggregateFunction<EntryData, First
         return new FirstAccumulatorQuery3();
     }
 
-    public void cleanUpTripList(long date){
 
+    private void newWindowTrip(EntryData entryData, FirstAccumulatorQuery3 firstAccumulatorQuery3){
+
+        firstAccumulatorQuery3.setTripId(entryData.getTripId());
+        firstAccumulatorQuery3.setLastTimestamp(entryData.getTimestamp());
+        StartTrip startTrip = this.tripList.get(entryData.getTripId());
+
+        //rimuovo tutti i vecchi trip rimasti nella lista
         Iterator iter = this.tripList.entrySet().iterator();
-
         while(iter.hasNext()){
-            Map.Entry<String, Trip> trip = (Map.Entry)iter.next();
-
-            if(trip.getValue().getStartDate() < date){
+            Map.Entry<String, StartTrip> trip = (Map.Entry)iter.next();
+            if(trip.getValue().getStartDate() < entryData.getTimestamp()){
                 iter.remove();
             }
+        }
+
+        if(startTrip == null){
+            // Primo viaggio ( start_lon, start_lat )
+            SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd HH");
+            Date trip_end = null;
+
+            try {
+                trip_end = formatter.parse(entryData.getTripId().split("_")[1].split(" - ")[1]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            this.tripList.put(entryData.getTripId(), new StartTrip(entryData.getLon(), entryData.getLat(), trip_end.getTime()));
+        }
+        else{
+            firstAccumulatorQuery3.setLon(startTrip.getStartLon());
+            firstAccumulatorQuery3.setLat(startTrip.getStartLat());
+            firstAccumulatorQuery3.setDistanzaTotale(Mappa.getDistanzaEuclidea( firstAccumulatorQuery3.getLon(), firstAccumulatorQuery3.getLat(), entryData.getLon(), entryData.getLat()));
         }
     }
 
     @Override
     public FirstAccumulatorQuery3 add(EntryData entryData, FirstAccumulatorQuery3 firstAccumulatorQuery3) {
         if( firstAccumulatorQuery3.getTripId() == null ) {
-            // new window
-            String trip_id = entryData.getTripId();
-
-            firstAccumulatorQuery3.setTripId(trip_id);
-            firstAccumulatorQuery3.setLastTimestamp(entryData.getTimestamp());
-            Trip trip = this.tripList.get(trip_id);
-
-            cleanUpTripList(entryData.getTimestamp()); // Remove finished trips
-
-            if(trip == null){
-                // First couple (lon,lat) found !!!
-                SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd HH");
-                Date trip_end = null;
-
-                try {
-                    trip_end = formatter.parse(trip_id.split("_")[1].split(" - ")[1]); // Find end date from trip id
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                this.tripList.put(trip_id, new Trip(entryData.getLon(), entryData.getLat(), trip_end.getTime())); // Add trip to list
-
-            }
-            else{
-                // Get initial (lon,lat)
-                firstAccumulatorQuery3.setLon(trip.getStartLon());
-                firstAccumulatorQuery3.setLat(trip.getStartLat());
-
-                firstAccumulatorQuery3.setDistanzaTotale(Mappa.getDistanzaEuclidea( firstAccumulatorQuery3.getLon(), firstAccumulatorQuery3.getLat(), entryData.getLon(), entryData.getLat()));
-            }
-
+            this.newWindowTrip(entryData,firstAccumulatorQuery3);
         }
         else if(entryData.getTimestamp() > firstAccumulatorQuery3.getLastTimestamp()){
-            // Compute the distance only if timestamp > maxTs
+            //caso in cui il timestamp della nuova tupla e' successivo a quello nell'accumulatore
             firstAccumulatorQuery3.setDistanzaTotale(Mappa.getDistanzaEuclidea( firstAccumulatorQuery3.getLon(), firstAccumulatorQuery3.getLat(), entryData.getLon(), entryData.getLat()));
             firstAccumulatorQuery3.setLastTimestamp(entryData.getTimestamp());
-
         }
-
         return firstAccumulatorQuery3;
     }
 

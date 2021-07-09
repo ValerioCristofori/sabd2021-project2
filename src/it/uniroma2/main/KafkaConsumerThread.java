@@ -16,50 +16,52 @@ import java.util.Properties;
 
 public class KafkaConsumerThread implements Runnable{
 
-    private final static int POLL_WAIT_TIME = 1000;
+    private final static int POLL_WAIT_TIME = 1000; // tempo di poll ogni 1 secondo
     private final Consumer<Long, String> consumer;
     private final int id;
     private final String topic;
     private String path;
-    private boolean running = true;
+    private boolean run = true;
 
-
+    // creazione consumer per la scrittura su file csv
     private Consumer<Long, String> createConsumer() {
         Properties props = KafkaHandler.getProperties("csv_output");
         return new KafkaConsumer<>(props);
     }
 
+    // sottoscrizione al topic
     private static void subscribeToTopic(Consumer<Long, String> consumer, String topic) {
         consumer.subscribe(Collections.singletonList(topic));
+    }
+
+    public void stop() {
+        this.run = false;
     }
 
     public KafkaConsumerThread(int id, String topic, String path) {
         this.id = id;
         this.topic = topic;
         this.path = path;
-        // create the consumer
         consumer = createConsumer();
 
-        // subscribe the consumer to the topic
         System.out.println("Subscribing at topic " + this.topic);
         subscribeToTopic(consumer, topic);
     }
 
     @Override
     public void run() {
-        System.out.println("Flink Consumer " + id + " running");
+        System.out.println("Consumer " + id );
         try {
-            while (running) {
+            while (run) {
                 ConsumerRecords<Long, String> records = consumer.poll(Duration.ofMillis(POLL_WAIT_TIME));
 
                 if (!records.isEmpty()) {
                     File file = new File(path);
                     if (!file.exists()) {
-                        // creates the file if it does not exist
                         file.createNewFile();
                     }
 
-                    // append to existing version of the same file
+                    // scrittura sul file da append su file esistente
                     FileWriter writer = new FileWriter(file, true);
                     BufferedWriter bw = new BufferedWriter(writer);
 
@@ -87,7 +89,4 @@ public class KafkaConsumerThread implements Runnable{
     }
 
 
-    public void stop() {
-        this.running = false;
-    }
 }

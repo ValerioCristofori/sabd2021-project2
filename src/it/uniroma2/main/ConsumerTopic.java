@@ -15,20 +15,18 @@ import java.util.logging.Logger;
 
 public class ConsumerTopic{
 
-    private static Logger log;
     private static final String RESULTS = "Results";
 
     public static void main( String[] args ){
 
-        //cleaning result directory to store data results
+        // clean della directory Results
         cleanResultsFolder();
-        System.out.println("Result directory prepared");
 
-        // create a consumer structure to allow stopping
+        // lista contenente i riferimenti ai thread da stoppare
         ArrayList<KafkaConsumerThread> consumers = new ArrayList<>();
 
         int id = 0;
-        // launch Flink topics consumers
+        // launch Flink consumer
         for (int i = 0; i < KafkaHandler.FLINK_TOPICS.length; i++) {
             KafkaConsumerThread consumer = new KafkaConsumerThread(id,
                     KafkaHandler.FLINK_TOPICS[i],
@@ -38,9 +36,8 @@ public class ConsumerTopic{
             id++;
         }
 
-        System.out.println("Enter something to stop consumers");
+        System.out.println("ENTER SOMETHING TO SHUTDOWN CONSUMERS...");
         Scanner scanner = new Scanner(System.in);
-        // wait for the user to digit something
         scanner.next();
         System.out.println("Sending shutdown signal to consumers");
         // stop consumers
@@ -48,7 +45,7 @@ public class ConsumerTopic{
             consumer.stop();
         }
         System.out.flush();
-        System.out.println("Signal sent, closing...");
+        System.out.println("Shutdown!!!");
 
     }
 

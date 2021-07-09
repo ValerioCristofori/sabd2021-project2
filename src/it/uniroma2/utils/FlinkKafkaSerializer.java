@@ -6,6 +6,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * serializzatore per kafka usato da flink nell'injection dei risultati sulle sink ( code di kafka )
+ */
 public class FlinkKafkaSerializer implements KafkaSerializationSchema<String> {
 
     private final String topic;

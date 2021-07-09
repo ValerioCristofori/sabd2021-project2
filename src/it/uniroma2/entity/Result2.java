@@ -9,6 +9,7 @@ public class Result2 {
 
     private static final int k = 3; //top
     private Date timestamp;
+    // tengo il rank per entrambe le fasce orarie
     private final List<FirstResult2> mattinaTop3; //ranking top 3 mattina
     private final List<FirstResult2> pomeriggioTop3; //ranking top 3 pomeriggio
     private String mare;
@@ -17,6 +18,7 @@ public class Result2 {
         mattinaTop3 = new ArrayList<>();
         pomeriggioTop3 = new ArrayList<>();
         for (int i = 0; i < k; i ++){
+            // inizializzo i valori vuoti a -1
             FirstResult2 query2FirstResult = new FirstResult2(-1);
             this.fakeAdd(query2FirstResult);
         }
@@ -53,6 +55,7 @@ public class Result2 {
 
 
     public void add(FirstResult2 firstResult){
+        // aggiungo alla lista facendo il controllo sulla specifica fascia oraria
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(firstResult.getTimestamp());
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);

@@ -31,7 +31,7 @@ public class FlinkMain {
         FlinkKafkaConsumer<String> consumer =
                 new FlinkKafkaConsumer<>(KafkaHandler.TOPIC_SOURCE, new SimpleStringSchema(), KafkaHandler.getProperties("consumer"));
 
-
+        // instanzio uno stream di entryData
         DataStream<EntryData> stream = env.addSource(consumer).map( new MapFunction<String, EntryData>() {
             @Override
             public EntryData map(String s) throws Exception {
@@ -67,17 +67,6 @@ public class FlinkMain {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        /* Metriche: ci aspettiamo throughput alto e bassa latenza
-        *
-        * per fare tracking della latenza devo settare latencyTrackingInterval a un numero positivo nella Flink configuration o ExecutionConfig
-        * al latencyTrackingInterval, le sorgenti emettono periodicamente il record LatencyMarker
-        * che contiene un timestamp di quando il record è stato emesso
-        *
-        * https://www.programmersought.com/article/32946124698/
-        *
-        * */
-
 
     }
 

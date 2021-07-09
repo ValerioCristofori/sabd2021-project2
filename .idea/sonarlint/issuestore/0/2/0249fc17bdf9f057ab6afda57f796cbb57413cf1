@@ -1,9 +1,9 @@
 
-H
-java:S2885"-Make "secondDateFormat" an instance variable.(ù×õÿÿÿÿÿ
-]	java:S125""<This block of commented-out lines of code should be removed.(æ–í›üÿÿÿÿ8ñ©ˆ¼¨/
-]	java:S125+"<This block of commented-out lines of code should be removed.(æ–í›üÿÿÿÿ8ô©ˆ¼¨/
-O
-java:S1068"4Remove this unused "secondDateFormat" private field.(ù×õÿÿÿÿÿ
-B
-java:S1068"'Remove this unused "log" private field.(Ä‡æ²şÿÿÿÿ
+M
+java:S1128"7Remove this unused import 'java.text.SimpleDateFormat'.(ú¡ÙÛ
+K
+java:S1128"5Remove this unused import 'java.util.logging.Logger'.(ƒ¥óš
+U
+java:S1118":Add a private constructor to hide the implicit public one.(Öº¤Íüÿÿÿÿ
+Q	java:S125."<This block of commented-out lines of code should be removed.(™´ô›
+Q	java:S125:"<This block of commented-out lines of code should be removed.(Ö¦÷¬

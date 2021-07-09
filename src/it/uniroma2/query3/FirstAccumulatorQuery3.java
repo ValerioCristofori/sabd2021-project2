@@ -1,12 +1,6 @@
 package it.uniroma2.query3;
 
-import it.uniroma2.entity.Mappa;
-import it.uniroma2.entity.Trip;
-
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FirstAccumulatorQuery3 implements Serializable {
 

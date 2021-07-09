@@ -1,0 +1,7 @@
+
+g
+java:S2095&"LUse try-with-resources or close this "BufferedWriter" in a "finally" clause.(ø¤º€ÿÿÿÿÿ
+`
+java:S2184"ECast one of the operands of this subtraction operation to a "double".(”ªô–ıÿÿÿÿ
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Š‘Ÿûıÿÿÿÿ
+\	java:S899"BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ

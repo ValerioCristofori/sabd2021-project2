@@ -1,12 +1,11 @@
 #!/bin/bash
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic flink-topic
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query1weekly
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query1monthly
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query2weekly
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query2monthly
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query3oneHour
-$KAFKA_HOME/kafka-topics.sh --delete --zookeeper localhost:2181 --topic query3twoHour
-
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic flink-topic
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query1weekly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query1monthly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query2weekly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query2monthly
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query3oneHour
+sudo docker exec -it kafka ./kafka/bin/kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic query3twoHour
 
 docker-compose down
 
