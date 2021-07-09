@@ -5,8 +5,6 @@ l
 pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
 Q
 !src/it/uniroma2/entity/Mappa.java,5/0/50ff930148961f08a07c01543289e2745afb3e85
-9
-	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 l
 <src/it/uniroma2/query3/FirstProcessWindowFunctionQuery3.java,8/0/80ea8bea43efe730b7ad72cc94cb3069528bc365
 S
@@ -45,3 +43,37 @@ R
 "src/it/uniroma2/query3/Query3.java,0/2/0249fc17bdf9f057ab6afda57f796cbb57413cf1
 X
 (src/it/uniroma2/metrics/MetricsSink.java,f/d/fd84365eafcfb56154346b453f9b72a0b7801b7e
+g
+7src/it/uniroma2/query2/ProcessWindowFunctionQuery2.java,1/b/1be957108411553b2f04b3b3edb5617834d0b7cf
+D
+docker/start-proj.sh,6/d/6dacc115e4e685792734baccc0122cc9783d0dcd
+R
+"src/it/uniroma2/query1/Query1.java,7/e/7ef8892171ce9cbb7ffdbdf58b17cd3eef125304
+\
+,src/it/uniroma2/query1/AggregatorQuery1.java,f/7/f7e9a1e02f915cb71174c55f0f4ba57641588651
+S
+#src/it/uniroma2/entity/Result1.java,0/5/055f517512ff9db509956df0418f00e0a12509d0
+]
+-src/it/uniroma2/query1/AccumulatorQuery1.java,9/6/963ad58a04f291826066ef54fc481c3b292d6d45
+T
+$src/it/uniroma2/main/DataSource.java,9/6/96b4b4e9848d792b769157b3986815ff1e31d6e0
+W
+'src/it/uniroma2/main/ConsumerTopic.java,3/a/3a327edeea5168a8ffe6e9e1029c34fbeba3caa8
+]
+-src/it/uniroma2/main/KafkaConsumerThread.java,a/5/a56e6ae2551f7b68fd2cfa3e5ed2efaa8d25ccdb
+\
+,src/it/uniroma2/query2/AggregatorQuery2.java,3/2/32f7b5a0bb94a091bc4679e1eab8337a7def2611
+b
+2src/it/uniroma2/query2/FirstAccumulatorQuery2.java,b/c/bca8cb3dddbbbe16b0e90423a273ce52ab11c969
+\
+,src/it/uniroma2/query3/AggregatorQuery3.java,1/5/152b2f0f2599d6e4617ae100d788d289eb061fd7
+S
+#src/it/uniroma2/entity/Result3.java,b/7/b74f783511c73a8605d7adfc20f9856c0b08ddf7
+^
+.src/it/uniroma2/query3/ranking/RankEntity.java,4/7/474d73ede3dce9151a170082f6026b1f189f52a9
+_
+/src/it/uniroma2/query3/ranking/RankingTrip.java,9/3/930b4410c7c0037b7832fe42b9ddcf16fc713f55
+R
+"src/it/uniroma2/query2/Query2.java,c/4/c4a05a52a8f3d7a9879266d9547e1ae4209d0449
+9
+	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d

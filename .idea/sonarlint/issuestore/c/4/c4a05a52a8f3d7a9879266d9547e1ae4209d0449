@@ -1,0 +1,7 @@
+
+K
+java:S1128"5Remove this unused import 'java.util.logging.Logger'.(ƒ¥óš
+U
+java:S1118"":Add a private constructor to hide the implicit public one.(‹¿üþþÿÿÿÿ
+V	java:S125C"<This block of commented-out lines of code should be removed.(¼šÛ¤øÿÿÿÿ
+V	java:S125T"<This block of commented-out lines of code should be removed.(¹þË’ûÿÿÿÿ

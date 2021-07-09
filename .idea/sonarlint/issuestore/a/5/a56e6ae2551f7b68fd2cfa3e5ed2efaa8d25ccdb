@@ -1,0 +1,15 @@
+
+g
+java:S2095B"LUse try-with-resources or close this "BufferedWriter" in a "finally" clause.(ø¤º€ÿÿÿÿÿ
+`
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(“ûû÷ıÿÿÿÿ
+S	java:S106/"9Replace this use of System.out or System.err by a logger.(µğÏ†şÿÿÿÿ
+S	java:S1065"9Replace this use of System.out or System.err by a logger.(°——ˆûÿÿÿÿ
+\	java:S899="BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ
+U
+java:S6213D":Rename this variable to not match a restricted identifier.(Ğé³¨ùÿÿÿÿ
+N	java:S106E"9Replace this use of System.out or System.err by a logger.(¨´¼Ù
+S	java:S106Q"9Replace this use of System.out or System.err by a logger.(ÁÒ«šÿÿÿÿÿ
+S	java:S106V"9Replace this use of System.out or System.err by a logger.(ª™ûøÿÿÿÿ
+E
+java:S20936"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
